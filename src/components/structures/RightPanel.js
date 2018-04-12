@@ -167,25 +167,19 @@ module.exports = React.createClass({
             return;
         }
 
-        // call AddressPickerDialog
-        dis.dispatch({
-            action: 'view_invite',
-            roomId: this.props.roomId,
-        });
-    },
-
-    onInviteToGroupButtonClick: function() {
-        showGroupInviteDialog(this.props.groupId).then(() => {
-            this.setState({
-                phase: this.Phase.GroupMemberList,
+        if (this.state.phase === this.Phase.GroupMemberList) {
+            showGroupInviteDialog(this.props.groupId);
+        } else if (this.state.phase === this.Phase.GroupRoomList) {
+            showGroupAddRoomDialog(this.props.groupId).then(() => {
+                this.forceUpdate();
             });
-        });
-    },
-
-    onAddRoomToGroupButtonClick: function() {
-        showGroupAddRoomDialog(this.props.groupId).then(() => {
-            this.forceUpdate();
-        });
+        } else {
+            // call AddressPickerDialog
+            dis.dispatch({
+                action: 'view_invite',
+                roomId: this.props.roomId,
+            });
+        }
     },
 
     onRoomStateMember: function(ev, state, member) {
@@ -239,10 +233,6 @@ module.exports = React.createClass({
             this.setState({
                 phase: this.Phase.GroupRoomList,
             });
-        } else if (payload.action === "view_group_member_list") {
-            this.setState({
-                phase: this.Phase.GroupMemberList,
-            });
         } else if (payload.action === "view_group_user") {
             this.setState({
                 phase: this.Phase.GroupMemberInfo,
@@ -287,16 +277,6 @@ module.exports = React.createClass({
                 membersTitle = _t('%(count)s Members', { count: numMembers });
                 membersBadge = <div title={membersTitle}>{ formatCount(numMembers) }</div>;
                 isUserInRoom = room.hasMembershipState(this.context.matrixClient.credentials.userId, 'join');
-            }
-
-            if (isUserInRoom) {
-                inviteGroup =
-                    <AccessibleButton className="mx_RightPanel_invite" onClick={this.onInviteButtonClick}>
-                        <div className="mx_RightPanel_icon" >
-                            <TintableSvg src="img/icon-invite-people.svg" width="35" height="35" />
-                        </div>
-                        <div className="mx_RightPanel_message">{ _t('Invite to this room') }</div>
-                    </AccessibleButton>;
             }
         }
 
@@ -386,14 +366,14 @@ module.exports = React.createClass({
 
         if (this.props.groupId && this.state.isUserPrivilegedInGroup) {
             inviteGroup = isPhaseGroup ? (
-                <AccessibleButton className="mx_RightPanel_invite" onClick={this.onInviteToGroupButtonClick}>
+                <AccessibleButton className="mx_RightPanel_invite" onClick={this.onInviteButtonClick}>
                     <div className="mx_RightPanel_icon" >
                         <TintableSvg src="img/icon-invite-people.svg" width="35" height="35" />
                     </div>
                     <div className="mx_RightPanel_message">{ _t('Invite to this community') }</div>
                 </AccessibleButton>
             ) : (
-                <AccessibleButton className="mx_RightPanel_invite" onClick={this.onAddRoomToGroupButtonClick}>
+                <AccessibleButton className="mx_RightPanel_invite" onClick={this.onInviteButtonClick}>
                     <div className="mx_RightPanel_icon" >
                         <TintableSvg src="img/icons-room-add.svg" width="35" height="35" />
                     </div>
