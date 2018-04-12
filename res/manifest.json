@@ -1,6 +1,6 @@
 {
-    "name": "Riot - open team collaboration",
-    "short_name": "Riot",
+    "name": "Tchap - MMSI",
+    "short_name": "Tchap",
     "display": "standalone",
     "theme_color": "#76CFA6",
     "start_url": "index.html",
@@ -45,7 +45,7 @@
     "related_applications": [
         {
             "platform": "play",
-            "url": "https://play.google.com/store/apps/details?id=im.vector.alpha",
+            "url": "https://play.google.com/store/apps/details?id=dinsic.tchap",
             "id": "im.vector.alpha"
         },
         {
