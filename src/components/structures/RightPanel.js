@@ -288,16 +288,6 @@ module.exports = React.createClass({
                 membersBadge = <div title={membersTitle}>{ formatCount(numMembers) }</div>;
                 isUserInRoom = room.hasMembershipState(this.context.matrixClient.credentials.userId, 'join');
             }
-
-            if (isUserInRoom) {
-                inviteGroup =
-                    <AccessibleButton className="mx_RightPanel_invite" onClick={this.onInviteButtonClick}>
-                        <div className="mx_RightPanel_icon" >
-                            <TintableSvg src="img/icon-invite-people.svg" width="35" height="35" />
-                        </div>
-                        <div className="mx_RightPanel_message">{ _t('Invite to this room') }</div>
-                    </AccessibleButton>;
-            }
         }
 
         const isPhaseGroup = [
