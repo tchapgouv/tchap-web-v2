@@ -31,6 +31,9 @@ import GroupStoreCache from 'matrix-react-sdk/lib/stores/GroupStoreCache';
 
 import { formatCount } from 'matrix-react-sdk/lib/utils/FormattingUtils';
 
+import DMRoomMap from 'matrix-react-sdk/lib/utils/DMRoomMap';
+import MatrixClientPeg from 'matrix-react-sdk/lib/MatrixClientPeg';
+
 class HeaderButton extends React.Component {
     constructor() {
         super();
@@ -55,13 +58,13 @@ class HeaderButton extends React.Component {
             className="mx_RightPanel_headerButton"
             onClick={this.onClick} >
 
-                <div className="mx_RightPanel_headerButton_badge">
-                    { this.props.badge ? this.props.badge : <span>&nbsp;</span> }
-                </div>
-                <TintableSvg src={this.props.iconSrc} width="25" height="25" />
-                { this.props.isHighlighted ? <div className="mx_RightPanel_headerButton_highlight" /> : <div /> }
+            <div className="mx_RightPanel_headerButton_badge">
+                { this.props.badge ? this.props.badge : <span>&nbsp;</span> }
+            </div>
+            <TintableSvg src={this.props.iconSrc} width="25" height="25" />
+            { this.props.isHighlighted ? <div className="mx_RightPanel_headerButton_highlight" /> : <div /> }
 
-            </AccessibleButton>;
+        </AccessibleButton>;
     }
 }
 
@@ -193,7 +196,7 @@ module.exports = React.createClass({
         if (this.state.phase === this.Phase.RoomMemberList && member.roomId === this.props.roomId) {
             this._delayedUpdate();
         } else if (this.state.phase === this.Phase.RoomMemberInfo && member.roomId === this.props.roomId &&
-                member.userId === this.state.member.userId) {
+            member.userId === this.state.member.userId) {
             // refresh the member info (e.g. new power level)
             this._delayedUpdate();
         }
@@ -260,6 +263,9 @@ module.exports = React.createClass({
     },
 
     render: function() {
+        const dmRoomMap = new DMRoomMap(MatrixClientPeg.get());
+        let isDMRoom = Boolean(dmRoomMap.getUserIdForRoomId(this.props.roomId));
+
         const MemberList = sdk.getComponent('rooms.MemberList');
         const MemberInfo = sdk.getComponent('rooms.MemberInfo');
         const NotificationPanel = sdk.getComponent('structures.NotificationPanel');
@@ -276,6 +282,7 @@ module.exports = React.createClass({
 
         let membersBadge;
         let membersTitle = _t('Members');
+
         if ((this.state.phase === this.Phase.RoomMemberList || this.state.phase === this.Phase.RoomMemberInfo)
             && this.props.roomId
         ) {
@@ -289,7 +296,7 @@ module.exports = React.createClass({
                 isUserInRoom = room.hasMembershipState(this.context.matrixClient.credentials.userId, 'join');
             }
 
-            if (isUserInRoom) {
+            if (isUserInRoom && !isDMRoom) {
                 inviteGroup =
                     <AccessibleButton className="mx_RightPanel_invite" onClick={this.onInviteButtonClick}>
                         <div className="mx_RightPanel_icon" >
@@ -309,33 +316,33 @@ module.exports = React.createClass({
         if (this.props.roomId) {
             headerButtons = [
                 <HeaderButton key="_membersButton" title={membersTitle} iconSrc="img/icons-people.svg"
-                    isHighlighted={[this.Phase.RoomMemberList, this.Phase.RoomMemberInfo].includes(this.state.phase)}
-                    clickPhase={this.Phase.RoomMemberList}
-                    badge={membersBadge}
-                    analytics={['Right Panel', 'Member List Button', 'click']}
+                              isHighlighted={[this.Phase.RoomMemberList, this.Phase.RoomMemberInfo].includes(this.state.phase)}
+                              clickPhase={this.Phase.RoomMemberList}
+                              badge={membersBadge}
+                              analytics={['Right Panel', 'Member List Button', 'click']}
                 />,
                 <HeaderButton key="_filesButton" title={_t('Files')} iconSrc="img/icons-files.svg"
-                    isHighlighted={this.state.phase === this.Phase.FilePanel}
-                    clickPhase={this.Phase.FilePanel}
-                    analytics={['Right Panel', 'File List Button', 'click']}
+                              isHighlighted={this.state.phase === this.Phase.FilePanel}
+                              clickPhase={this.Phase.FilePanel}
+                              analytics={['Right Panel', 'File List Button', 'click']}
                 />,
                 <HeaderButton key="_notifsButton" title={_t('Notifications')} iconSrc="img/icons-notifications.svg"
-                    isHighlighted={this.state.phase === this.Phase.NotificationPanel}
-                    clickPhase={this.Phase.NotificationPanel}
-                    analytics={['Right Panel', 'Notification List Button', 'click']}
+                              isHighlighted={this.state.phase === this.Phase.NotificationPanel}
+                              clickPhase={this.Phase.NotificationPanel}
+                              analytics={['Right Panel', 'Notification List Button', 'click']}
                 />,
             ];
         } else if (this.props.groupId) {
             headerButtons = [
                 <HeaderButton key="_groupMembersButton" title={_t('Members')} iconSrc="img/icons-people.svg"
-                    isHighlighted={isPhaseGroup}
-                    clickPhase={this.Phase.GroupMemberList}
-                    analytics={['Right Panel', 'Group Member List Button', 'click']}
+                              isHighlighted={isPhaseGroup}
+                              clickPhase={this.Phase.GroupMemberList}
+                              analytics={['Right Panel', 'Group Member List Button', 'click']}
                 />,
                 <HeaderButton key="_roomsButton" title={_t('Rooms')} iconSrc="img/icons-room.svg"
-                    isHighlighted={[this.Phase.GroupRoomList, this.Phase.GroupRoomInfo].includes(this.state.phase)}
-                    clickPhase={this.Phase.GroupRoomList}
-                    analytics={['Right Panel', 'Group Room List Button', 'click']}
+                              isHighlighted={[this.Phase.GroupRoomList, this.Phase.GroupRoomInfo].includes(this.state.phase)}
+                              clickPhase={this.Phase.GroupRoomList}
+                              analytics={['Right Panel', 'Group Room List Button', 'click']}
                 />,
             ];
         }
@@ -346,7 +353,7 @@ module.exports = React.createClass({
             // button on these 2 screens or you won't be able to re-expand the panel.
             headerButtons.push(
                 <div className="mx_RightPanel_headerButton mx_RightPanel_collapsebutton" key="_minimizeButton"
-                    title={_t("Hide panel")} aria-label={_t("Hide panel")} onClick={this.onCollapseClick}
+                     title={_t("Hide panel")} aria-label={_t("Hide panel")} onClick={this.onCollapseClick}
                 >
                     <TintableSvg src="img/minimise.svg" width="10" height="16" />
                 </div>,
