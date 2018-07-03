@@ -31,6 +31,9 @@ import GroupStoreCache from 'matrix-react-sdk/lib/stores/GroupStoreCache';
 
 import { formatCount } from 'matrix-react-sdk/lib/utils/FormattingUtils';
 
+import DMRoomMap from 'matrix-react-sdk/lib/utils/DMRoomMap';
+import MatrixClientPeg from 'matrix-react-sdk/lib/MatrixClientPeg';
+
 class HeaderButton extends React.Component {
     constructor() {
         super();
@@ -260,6 +263,9 @@ module.exports = React.createClass({
     },
 
     render: function() {
+        const dmRoomMap = new DMRoomMap(MatrixClientPeg.get());
+        let isDMRoom = Boolean(dmRoomMap.getUserIdForRoomId(this.props.roomId));
+
         const MemberList = sdk.getComponent('rooms.MemberList');
         const MemberInfo = sdk.getComponent('rooms.MemberInfo');
         const NotificationPanel = sdk.getComponent('structures.NotificationPanel');
@@ -276,6 +282,7 @@ module.exports = React.createClass({
 
         let membersBadge;
         let membersTitle = _t('Members');
+
         if ((this.state.phase === this.Phase.RoomMemberList || this.state.phase === this.Phase.RoomMemberInfo)
             && this.props.roomId
         ) {
@@ -287,6 +294,16 @@ module.exports = React.createClass({
                 membersTitle = _t('%(count)s Members', { count: numMembers });
                 membersBadge = <div title={membersTitle}>{ formatCount(numMembers) }</div>;
                 isUserInRoom = room.hasMembershipState(this.context.matrixClient.credentials.userId, 'join');
+            }
+
+            if (isUserInRoom && !isDMRoom) {
+                inviteGroup =
+                    <AccessibleButton className="mx_RightPanel_invite" onClick={this.onInviteButtonClick}>
+                        <div className="mx_RightPanel_icon" >
+                            <TintableSvg src="img/icon-invite-people.svg" width="35" height="35" />
+                        </div>
+                        <div className="mx_RightPanel_message">{ _t('Invite to this room') }</div>
+                    </AccessibleButton>;
             }
         }
 
