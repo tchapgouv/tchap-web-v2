@@ -17,7 +17,6 @@ limitations under the License.
 'use strict';
 
 var React = require('react');
-import { _t } from 'matrix-react-sdk/lib/languageHandler';
 import SettingsStore from 'matrix-react-sdk/lib/settings/SettingsStore';
 
 module.exports = React.createClass({
@@ -31,6 +30,22 @@ module.exports = React.createClass({
         // ...except then we wouldn't be able to switch to the Status theme at runtime.
         if (SettingsStore.getValue("theme") === 'status') return <div/>;
 
-        return (null);
+        var data = require('../../../../res/manifest.json');
+
+
+        return (
+            <div className="mx_Login_links">
+                <br />
+                <img src="themes/tchap/img/logos/logo_rep_fr.svg" width="100" height="50" alt="Republique Française"/>
+                <br /><br />
+                <a href="https://www.legifrance.gouv.fr/">Legifrance</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                <a href="https://www.service-public.fr">Service-public</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                <a href="https://www.gouvernement.fr/">Gouvernement</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                <a href="https://www.data.gouv.fr/fr/">OpenData</a>
+                <br />
+                <br />
+                <span>Tchap v{data.version}</span>
+            </div>
+        );
     }
 });

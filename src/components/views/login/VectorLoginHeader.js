@@ -19,7 +19,7 @@ limitations under the License.
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const DEFAULT_LOGO_URI = "img/logos/tchap-logo.svg";
+const DEFAULT_LOGO_URI = "themes/tchap/img/logos/tchap-logo.svg";
 
 module.exports = React.createClass({
     displayName: 'VectorLoginHeader',

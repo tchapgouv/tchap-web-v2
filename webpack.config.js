@@ -23,7 +23,9 @@ module.exports = {
         "olm": "./src/vector/olm-loader.js",
 
         // CSS themes
-        "theme-light": "./src/skins/vector/css/themes/light.scss",
+        "theme-light":  "./node_modules/matrix-react-sdk/res/themes/light/css/light.scss",
+        "theme-dark":   "./node_modules/matrix-react-sdk/res/themes/dark/css/dark.scss",
+        "theme-status": "./res/themes/status/css/status.scss",
     },
     module: {
         preLoaders: [
