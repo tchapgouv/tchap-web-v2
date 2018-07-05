@@ -30,7 +30,7 @@ module.exports = React.createClass({
         // ...except then we wouldn't be able to switch to the Status theme at runtime.
         if (SettingsStore.getValue("theme") === 'status') return <div/>;
 
-        var data = require('../../../../res/manifest.json');
+        var data = require('../../../../package.json');
 
 
         return (
@@ -44,7 +44,7 @@ module.exports = React.createClass({
                 <a href="https://www.data.gouv.fr/fr/">OpenData</a>
                 <br />
                 <br />
-                <span>Tchap v{data.version}</span>
+                <span>Tchap v{data.appVersion}</span>
             </div>
         );
     }

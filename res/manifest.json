@@ -2,7 +2,7 @@
     "name": "Tchap - MMSI",
     "short_name": "Tchap",
     "display": "standalone",
-    "theme_color": "#76CFA6",
+    "theme_color": "#4D3F7D",
     "start_url": "index.html",
     "version": "0.6.1",
     "icons": [
