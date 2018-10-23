@@ -154,7 +154,7 @@ var onNewScreen = function(screen) {
 var makeRegistrationUrl = function(params) {
     let url;
     if (window.location.protocol === "file:") {
-        url = 'https://riot.im/app/#/register';
+        url = 'https://www.tchap.gouv.fr/#/register';
     } else {
         url = (
             window.location.protocol + '//' +
@@ -268,7 +268,7 @@ async function loadApp() {
                 return;
             }
             else {
-                if (confirm(_t("Riot is not supported on mobile web. Install the app?"))) {
+                if (confirm(_t("Tchap is not supported on mobile web. Install the app?"))) {
                     window.location = "https://itunes.apple.com/us/app/vector.im/id1083446067";
                     return;
                 }
@@ -281,8 +281,8 @@ async function loadApp() {
                 return;
             }
             else {
-                if (confirm(_t("Riot is not supported on mobile web. Install the app?"))) {
-                    window.location = "https://play.google.com/store/apps/details?id=im.vector.alpha";
+                if (confirm(_t("Tchap is not supported on mobile web. Install the app?"))) {
+                    window.location = "https://play.google.com/store/apps/details?id=dinsic.tchap";
                     return;
                 }
             }

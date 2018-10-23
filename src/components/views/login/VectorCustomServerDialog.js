@@ -35,7 +35,7 @@ module.exports = React.createClass({
                     <span dangerouslySetInnerHTML={{__html: sanitizeHtml(_t(
                         "You can use the custom server options to sign into other Matrix "+
                         "servers by specifying a different Home server URL.<br/>This allows "+
-                        "you to use Riot with an existing Matrix account on a different home "+
+                        "you to use Tchap with an existing Matrix account on a different home "+
                         "server.<br/><br/>You can also set a custom identity server but you won't "+
                         "be able to invite users by email address, or be invited by email address yourself.",
                     ))}} />
