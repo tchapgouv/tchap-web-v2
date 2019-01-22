@@ -1,10 +1,10 @@
 {
-    "name": "Tchap - MMSI",
+    "name": "Tchap",
     "short_name": "Tchap",
     "display": "standalone",
     "theme_color": "#4D3F7D",
     "start_url": "index.html",
-    "version": "0.6.1",
+    "version": "1.1.3",
     "icons": [
         {
             "src": "vector-icons/android-chrome-36x36.png",
