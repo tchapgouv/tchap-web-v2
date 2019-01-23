@@ -156,12 +156,8 @@ var makeRegistrationUrl = function(params) {
     if (window.location.protocol === "file:") {
         url = 'https://www.tchap.gouv.fr/#/register';
     } else {
-        url = (
-            window.location.protocol + '//' +
-            window.location.host +
-            window.location.pathname +
-            '#/register'
-        );
+        // Use hs_url instead of WebApp URL until the WebApp is ready to respond to '#/register'
+        url = params.hs_url + '/' + '#/register';
     }
 
     const keys = Object.keys(params);
