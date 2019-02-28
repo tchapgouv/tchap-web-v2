@@ -36,7 +36,7 @@ module.exports = React.createClass({
         return (
             <div className="mx_Login_links">
                 <br />
-                <img src="themes/tchap/img/logos/logo_rep_fr.svg" width="100" height="50" alt="Republique Française"/>
+                <img src="themes/tchap/img/logos/logo_rep_fr.svg" width="100" height="59" alt="Republique Française"/>
                 <br /><br />
                 <a href="https://www.legifrance.gouv.fr/">Legifrance</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                 <a href="https://www.service-public.fr">Service-public</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
