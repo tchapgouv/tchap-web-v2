@@ -2,10 +2,10 @@
   "name": "tchap-web",
   "productName": "Tchap",
   "main": "electron_app/src/electron-main.js",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "A feature-rich client for Matrix.org",
   "author": "DINSIC",
-  "appVersion": "1.4.2",
+  "appVersion": "1.5.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/dinsic-pim/riot-web"
