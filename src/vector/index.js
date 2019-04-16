@@ -256,29 +256,15 @@ async function loadApp() {
 
     if (!preventRedirect) {
         if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-            // FIXME: ugly status hardcoding
-            if (SettingsStore.getValue("theme") === 'status') {
-                window.location = "https://status.im/join-riot.html";
+            if (confirm(_t("Tchap is not supported on mobile web. Install the app?"))) {
+                window.location = "https://itunes.apple.com/fr/app/tchap/id1446253779";
                 return;
-            }
-            else {
-                if (confirm(_t("Tchap is not supported on mobile web. Install the app?"))) {
-                    window.location = "https://itunes.apple.com/us/app/vector.im/id1083446067";
-                    return;
-                }
             }
         }
         else if (/Android/.test(navigator.userAgent)) {
-            // FIXME: ugly status hardcoding
-            if (SettingsStore.getValue("theme") === 'status') {
-                window.location = "https://status.im/join-riot.html";
+            if (confirm(_t("Tchap is not supported on mobile web. Install the app?"))) {
+                window.location = "https://play.google.com/store/apps/details?id=fr.gouv.tchap.a";
                 return;
-            }
-            else {
-                if (confirm(_t("Tchap is not supported on mobile web. Install the app?"))) {
-                    window.location = "https://play.google.com/store/apps/details?id=dinsic.tchap";
-                    return;
-                }
             }
         }
     }
