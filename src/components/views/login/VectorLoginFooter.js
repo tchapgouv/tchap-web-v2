@@ -41,7 +41,9 @@ module.exports = React.createClass({
                 <a href="https://www.legifrance.gouv.fr/">Legifrance</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                 <a href="https://www.service-public.fr">Service-public</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
                 <a href="https://www.gouvernement.fr/">Gouvernement</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
-                <a href="https://www.data.gouv.fr/fr/">OpenData</a>
+                <a href="https://www.data.gouv.fr/fr/">OpenData</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                <a href="https://www.tchap.gouv.fr/faq/#_Toc4344726">Mentions Légales</a>&nbsp;&nbsp;&middot;&nbsp;&nbsp;
+                <a href="https://www.tchap.gouv.fr/faq/#_Toc4344725">Contact</a>
                 <br />
                 <br />
                 <span>Tchap v{data.appVersion}</span>
