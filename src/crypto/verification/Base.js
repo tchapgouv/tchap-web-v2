@@ -64,6 +64,19 @@ export default class VerificationBase extends EventEmitter {
         this._promise = null;
     }
 
+    get initiatedByMe() {
+        // if there is no start event yet,
+        // we probably want to send it,
+        // which happens if we initiate
+        if (!this.startEvent) {
+            return true;
+        }
+        const sender = this.startEvent.getSender();
+        const content = this.startEvent.getContent();
+        return sender === this._baseApis.getUserId() &&
+            content.from_device === this._baseApis.getDeviceId();
+    }
+
     _sendToDevice(type, content) {
         if (this._done) {
             return Promise.reject(new Error("Verification is already done"));
