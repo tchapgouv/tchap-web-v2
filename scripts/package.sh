@@ -4,6 +4,7 @@ set -e
 
 dev=""
 version=`node -e 'console.log(require("./package.json").version)'`
+now=$(date +%Y%m%d)
 
 yarn clean
 yarn build$dev
@@ -22,8 +23,8 @@ else
     echo ${version} > tchap-$version/version
 fi
 
-tar chvzf dist/tchap-$version.tar.gz tchap-$version
+tar chvzf dist/tchap-$version-$now.tar.gz tchap-$version
 rm -r tchap-$version
 
 echo
-echo "Packaged dist/tchap-$version.tar.gz"
+echo "Packaged dist/tchap-$version-$now.tar.gz"
