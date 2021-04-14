@@ -2,9 +2,9 @@
   "name": "tchap-web",
   "productName": "Tchap",
   "main": "electron_app/src/electron-main.js",
-  "version": "2.3.0",
+  "version": "2.3.2",
   "description": "A feature-rich client for Matrix.org",
-  "author": "Minarm",
+  "author": "MinArm/DINUM/matrix.org",
   "repository": {
     "type": "git",
     "url": "https://github.com/dinsic-pim/tchap-web"
