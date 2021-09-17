@@ -41,7 +41,7 @@ const base = require("./base");
  *
  * @property {object} sharedWithDevices
  *    devices with which we have shared the session key
- *        userId -> {deviceId -> msgindex}
+ *        userId -> {deviceId -> SharedWithData}
  */
 function OutboundSessionInfo(sessionId) {
     this.sessionId = sessionId;
@@ -77,12 +77,12 @@ OutboundSessionInfo.prototype.needsRotation = function(
 };
 
 OutboundSessionInfo.prototype.markSharedWithDevice = function(
-    userId, deviceId, chainIndex,
+    userId, deviceId, deviceKey, chainIndex,
 ) {
     if (!this.sharedWithDevices[userId]) {
         this.sharedWithDevices[userId] = {};
     }
-    this.sharedWithDevices[userId][deviceId] = chainIndex;
+    this.sharedWithDevices[userId][deviceId] = { deviceKey, messageIndex: chainIndex };
 };
 
 /**
@@ -331,7 +331,7 @@ MegolmEncryption.prototype._splitUserDeviceMap = function(
 
                 // mark this device as "handled" because we don't want to try
                 // to claim a one-time-key for dead devices on every message.
-                session.markSharedWithDevice(userId, deviceId, chainIndex);
+                session.markSharedWithDevice(userId, deviceId, deviceInfo.getIdentityKey(), chainIndex);
 
                 // ensureOlmSessionsForUsers has already done the logging,
                 // so just skip it.
@@ -386,6 +386,7 @@ MegolmEncryption.prototype._encryptAndSendKeysToDevices = function(
         ciphertext: {},
     };
     const contentMap = {};
+    const deviceInfoByDeviceId = new Map();
 
     const promises = [];
     for (let i = 0; i < userDeviceMap.length; i++) {
@@ -393,6 +394,7 @@ MegolmEncryption.prototype._encryptAndSendKeysToDevices = function(
         const userId = val.userId;
         const deviceInfo = val.deviceInfo;
         const deviceId = deviceInfo.deviceId;
+        deviceInfoByDeviceId.set(deviceId, deviceInfo);
 
         if (!contentMap[userId]) {
             contentMap[userId] = {};
@@ -418,7 +420,10 @@ MegolmEncryption.prototype._encryptAndSendKeysToDevices = function(
             for (const userId of Object.keys(contentMap)) {
                 for (const deviceId of Object.keys(contentMap[userId])) {
                     session.markSharedWithDevice(
-                        userId, deviceId, chainIndex,
+                        userId,
+                        deviceId,
+                        deviceInfoByDeviceId.get(deviceId).getIdentityKey(),
+                        chainIndex,
                     );
                 }
             }
@@ -449,8 +454,8 @@ MegolmEncryption.prototype.reshareKeyWithDevice = async function(
         logger.debug("Session ID " + sessionId + " never shared with user " + userId);
         return;
     }
-    const sentChainIndex = obSessionInfo.sharedWithDevices[userId][device.deviceId];
-    if (sentChainIndex === undefined) {
+    const sessionSharedData = obSessionInfo.sharedWithDevices[userId][device.deviceId];
+    if (sessionSharedData === undefined) {
         logger.debug(
             "Session ID " + sessionId + " never shared with device " +
             userId + ":" + device.deviceId,
@@ -458,10 +463,18 @@ MegolmEncryption.prototype.reshareKeyWithDevice = async function(
         return;
     }
 
+    if (sessionSharedData.deviceKey !== device.getIdentityKey()) {
+        logger.warn(
+        `Session has been shared with device ${device.deviceId} but with identity ` +
+        `key ${sessionSharedData.deviceKey}. Key is now ${device.getIdentityKey()}!`,
+        );
+        return;
+    }
+
     // get the key from the inbound session: the outbound one will already
     // have been ratcheted to the next chain index.
     const key = await this._olmDevice.getInboundGroupSessionKey(
-        this._roomId, senderKey, sessionId, sentChainIndex,
+        this._roomId, senderKey, sessionId, sessionSharedData.messageIndex,
     );
 
     if (!key) {
