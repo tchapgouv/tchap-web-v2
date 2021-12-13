@@ -2,7 +2,7 @@
   "name": "tchap-web",
   "productName": "Tchap",
   "main": "electron_app/src/electron-main.js",
-  "version": "2.3.5",
+  "version": "2.3.7",
   "description": "A feature-rich client for Matrix.org",
   "author": "MinArm/DINUM/matrix.org",
   "repository": {
@@ -76,7 +76,7 @@
     "matrix-js-sdk": "1.0.4",
     "matrix-react-sdk": "1.0.7",
     "modernizr": "^3.6.0",
-    "olm": "https://packages.matrix.org/npm/olm/olm-3.1.0-pre3.tgz",
+    "olm": "https://gitlab.matrix.org/api/v4/projects/27/packages/npm/@matrix-org/olm/-/@matrix-org/olm-3.2.8.tgz",
     "prop-types": "^15.6.2",
     "react": "^15.6.0",
     "react-dom": "^15.6.0",
