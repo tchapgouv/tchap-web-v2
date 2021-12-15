@@ -24,13 +24,13 @@
     ],
     "base_host_url": "https://tchap.gouv.fr",
     "generic_endpoints": {
-        "faq": "/faq/",
+        "faq": "https://tchap.beta.gouv.fr/faq",
         "tac": "/tac/",
-        "user_guide": "/tchap-prise-en-main.pdf",
-        "encryption_info": "/faq/#_Toc4344718_11",
-        "export_info": "/faq/#_Toc4344718_13",
-        "mobile_info": "/faq/#_Toc4344718_12",
-        "browser_session_info": "/faq/#_Toc4344718_13",
+        "user_guide": "https://tchap.beta.gouv.fr/prise-en-main",
+        "encryption_info": "https://tchap.beta.gouv.fr/faq#tcq05_001",
+        "export_info": "https://tchap.beta.gouv.fr/faq#tcq03_002",
+        "mobile_info": "https://tchap.beta.gouv.fr/faq#tcq03_002",
+        "browser_session_info": "https://tchap.beta.gouv.fr/faq#tcq03_002",
         "mobile_download": "/mobile_guide"
     },
     "branding": {
@@ -39,8 +39,8 @@
             {"text": "Service-public", "url": "https://www.service-public.fr/"},
             {"text": "Gouvernement", "url": "https://www.gouvernement.fr/"},
             {"text": "OpenData", "url": "https://www.data.gouv.fr/fr/"},
-            {"text": "Mentions Légales", "url": "https://tchap.gouv.fr/faq/#_Toc4344724_04"},
-            {"text": "Contact", "url": "https://tchap.gouv.fr/faq/#_Toc4344724_03"}
+            {"text": "Mentions Légales", "url": "/tac/"},
+            {"text": "Contact", "url": "mailto:tchap@beta.gouv.fr"}
         ]
     },
     "hs_url_list": [
