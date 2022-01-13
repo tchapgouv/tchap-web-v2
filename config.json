@@ -39,8 +39,8 @@
             {"text": "Service-public", "url": "https://www.service-public.fr/"},
             {"text": "Gouvernement", "url": "https://www.gouvernement.fr/"},
             {"text": "OpenData", "url": "https://www.data.gouv.fr/fr/"},
-            {"text": "Mentions Légales", "url": "https://tchap.gouv.fr/faq/#_Toc4344724_04"},
-            {"text": "Contact", "url": "https://tchap.gouv.fr/faq/#_Toc4344724_03"}
+            {"text": "Mentions Légales", "url": "/tac/"},
+            {"text": "Contact", "url": "mailto:tchap@beta.gouv.fr"}
         ]
     },
     "hs_url_list": [
