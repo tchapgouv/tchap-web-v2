@@ -7,7 +7,9 @@ version=`node -e 'console.log(require("./package.json").version)'`
 now=$(date +%Y%m%d)
 
 yarn clean
-yarn build$dev
+# Estelle change build command for now
+# yarn build$dev
+yarn build:scalingo
 
 # include the sample config in the tarball. Arguably this should be done by
 # `yarn build`, but it's just too painful.
@@ -23,8 +25,10 @@ else
     echo ${version} > tchap-$version/version
 fi
 
-tar chvzf dist/tchap-$version-$now.tar.gz tchap-$version
-rm -r tchap-$version
+# Estelle remove tar for now
+#tar chvzf dist/tchap-$version-$now.tar.gz tchap-$version
+#rm -r tchap-$version
 
 echo
-echo "Packaged dist/tchap-$version-$now.tar.gz"
+#echo "Packaged dist/tchap-$version-$now.tar.gz"
+echo "Package dist/tchap-$version"
