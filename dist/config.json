@@ -1,0 +1,63 @@
+{
+    "brand": "Tchap",
+    "integrations_jitsi_widget_url": "https://scalar.vector.im/api/widgets/jitsi.html",
+    "bug_report_endpoint_url": "/bugreports/submit",
+    "features": {
+        "feature_groups": "labs",
+        "feature_pinning": "labs"
+    },
+    "default_theme": "tchap",
+    "piwik": {
+        "url": "https://piwik.riot.im/",
+        "whitelistedHSUrls": ["https://matrix.org"],
+        "whitelistedISUrls": ["https://vector.im", "https://matrix.org"],
+        "siteId": 1
+    },
+    "enable_presence_by_hs_url": {
+        "https://matrix.org": false
+    },
+    "terms_and_conditions_links": [
+        {
+            "url": "https://tchap.gouv.fr/tac/",
+            "text": "Conditions générales d'utilisation"
+        }
+    ],
+    "base_host_url": "https://tchap.gouv.fr",
+    "generic_endpoints": {
+        "faq": "/faq/",
+        "tac": "/tac/",
+        "user_guide": "/tchap-prise-en-main.pdf",
+        "encryption_info": "/faq/#tcq05_001",
+        "export_info": "/faq/#tcq03_002",
+        "mobile_info": "/faq/#tcq06_002",
+        "browser_session_info": "/faq/#tcq03_002",
+        "mobile_download": "/mobile_guide"
+    },
+    "branding": {
+        "authFooterLinks": [
+            {"text": "Legifrance", "url": "https://www.legifrance.gouv.fr/"},
+            {"text": "Service-public", "url": "https://www.service-public.fr/"},
+            {"text": "Gouvernement", "url": "https://www.gouvernement.fr/"},
+            {"text": "OpenData", "url": "https://www.data.gouv.fr/fr/"},
+            {"text": "Mentions Légales", "url": "/tac/"},
+            {"text": "Contact", "url": "mailto:tchap@beta.gouv.fr"}
+        ]
+    },
+    "hs_url_list": [
+        "agent.tchap.gouv.fr",
+        "agent.dev-durable.tchap.gouv.fr",
+        "agent.dinum.tchap.gouv.fr",
+        "agent.intradef.tchap.gouv.fr",
+        "agent.diplomatie.tchap.gouv.fr",
+        "agent.justice.tchap.gouv.fr",
+        "agent.agriculture.tchap.gouv.fr",
+        "agent.interieur.tchap.gouv.fr",
+        "agent.social.tchap.gouv.fr",
+        "agent.education.tchap.gouv.fr",
+        "agent.finances.tchap.gouv.fr",
+        "agent.ssi.tchap.gouv.fr",
+        "agent.pm.tchap.gouv.fr",
+        "agent.elysee.tchap.gouv.fr",
+        "agent.culture.tchap.gouv.fr"
+    ]
+}
