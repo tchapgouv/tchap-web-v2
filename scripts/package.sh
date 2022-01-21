@@ -8,7 +8,6 @@ now=$(date +%Y%m%d)
 
 yarn clean
 # Estelle change build command for now
-# yarn build$dev
 yarn build:scalingo
 
 # include the sample config in the tarball. Arguably this should be done by
@@ -27,7 +26,8 @@ fi
 
 # Estelle remove tar for now
 #tar chvzf dist/tchap-$version-$now.tar.gz tchap-$version
-#rm -r tchap-$version
+cp -r tchap-$version/* dist/
+rm -r tchap-$version
 
 echo
 #echo "Packaged dist/tchap-$version-$now.tar.gz"

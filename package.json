@@ -23,6 +23,9 @@
     "test",
     "webpack.config.js"
   ],
+  "engines": {
+    "node": "14.17.3"
+  },
   "style": "bundle.css",
   "matrix-react-parent": "matrix-react-sdk",
   "scripts": {
@@ -43,8 +46,8 @@
     "build:js-sdk": "node scripts/yarn-sub.js matrix-js-sdk start:init",
     "build:original": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "build:dev": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle:dev",
-    "build": "yarn build:js-sdk && yarn install:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
-    "dist": "scripts/package.sh",
+    "build:scalingo": "yarn build:js-sdk && yarn install:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
+    "build": "scripts/package.sh",
     "install:electron": "install-app-deps",
     "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install && node scripts/yarn-sub.js matrix-react-sdk build",
     "electron": "yarn install:electron && electron .",
