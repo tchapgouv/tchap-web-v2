@@ -46,7 +46,7 @@
     "build": "yarn build:js-sdk && yarn install:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "dist": "scripts/package.sh",
     "install:electron": "install-app-deps",
-    "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install && node scripts/yarn-sub.js matrix-react-sdk prepare",
+    "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install --verbose && node scripts/yarn-sub.js matrix-react-sdk prepare",
     "electron": "yarn install:electron && electron .",
     "start:res": "node scripts/copy-res.js -w",
     "start:js": "webpack-dev-server --host=0.0.0.0 --output-filename=bundles/_dev_/[name].js --output-chunk-filename=bundles/_dev_/[name].js -w --progress --mode development",
