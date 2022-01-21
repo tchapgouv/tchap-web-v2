@@ -1537,13 +1537,6 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-base-x@3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.4.tgz#94c1788736da065edb1d68808869e357c977fa77"
-  integrity sha512-UYOadoSIkEI/VrRGSG6qp93rp2WdokiAiNYDfGW5qURAY8GiAQkvMbwNNSDYiVJopqv4gCna7xqf4rrNGp+5AA==
-  dependencies:
-    safe-buffer "^5.0.1"
-
 base-x@^3.0.2:
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.9.tgz#6349aaabb58526332de9f60995e548a53fe21320"
@@ -2634,6 +2627,11 @@ cpx@^1.3.2:
     safe-buffer "^5.0.1"
     shell-quote "^1.6.1"
     subarg "^1.0.0"
+
+crc-32@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/crc-32/-/crc-32-0.3.0.tgz#6a3d3687f5baec41f7e9b99fe1953a2e5d19775e"
+  integrity sha1-aj02h/W67EH36bmf4ZU6Ll0Zd14=
 
 crc32-stream@^3.0.1:
   version "3.0.1"
@@ -6088,7 +6086,7 @@ lodash.union@^4.6.0:
   resolved "https://registry.yarnpkg.com/lodash.union/-/lodash.union-4.6.0.tgz#48bb5088409f16f1821666641c44dd1aaae3cd88"
   integrity sha1-SLtQiECfFvGCFmZkHETdGqrjzYg=
 
-lodash@^4.0.0, lodash@^4.1.1, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.5.0:
+lodash@^4.0.0, lodash@^4.1.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.5.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -6206,14 +6204,13 @@ math-random@^1.0.1:
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.4.tgz#5dd6943c938548267016d4e34f057583080c514c"
   integrity sha512-rUxjysqif/BZQH2yhd5Aaq7vXMSx9NdEsQcyA07uEzIvxgI7zIr33gGsh+RU0/XjmQpCW7RsVof1vlkvQVCK5A==
 
-matrix-js-sdk@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-1.0.4.tgz#dbfa8399f750a23b020c1ec8f037a2f5c36d4672"
-  integrity sha512-FPx7U1a0SmLbDXhXlR4XHlC+FVKTnK2/+ZBtyOWGLi3nxw4x8hCSSzJ82gzStya1qvhHvbf/y7eblYFVE1l7SQ==
+matrix-js-sdk@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-2.2.0.tgz#c96a2caa4c92e5998443027579d7e76d4bcd4d21"
+  integrity sha512-gab7wuscgTKbXY5x136t9qSnDbOuq785ezd++NoFLEau0YjDos0YKolAm0TValUC9LY30CoVqqMfyPJ68CMezQ==
   dependencies:
     another-json "^0.2.0"
     babel-runtime "^6.26.0"
-    base-x "3.0.4"
     bluebird "^3.5.0"
     browser-request "^0.3.3"
     bs58 "^4.0.1"
@@ -6231,10 +6228,9 @@ matrix-mock-request@^1.2.3:
     bluebird "^3.5.0"
     expect "^1.20.2"
 
-matrix-react-sdk@1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/matrix-react-sdk/-/matrix-react-sdk-1.0.7.tgz#4dc6db50f9bf3c6dd5c1fdea8fa3d4eec2e58125"
-  integrity sha512-sJpu87itcAbMFaWeLEfpfNbQ4uJ+MIvmHw6RfbgHvBw4VtFAOgg/SypIoMjEEzk1KCgAUSV9k0CodwKsXHo0Jw==
+"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#develop":
+  version "2.3.7-tchap"
+  resolved "https://codeload.github.com/tchapgouv/matrix-react-sdk/tar.gz/a1ab719f25a6dddec2b7f1112c436cebcb13fe4f"
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
     babel-runtime "^6.26.0"
@@ -6258,11 +6254,12 @@ matrix-react-sdk@1.0.7:
     is-ip "^2.0.0"
     isomorphic-fetch "^2.2.1"
     linkifyjs "^2.1.6"
-    lodash "^4.13.1"
+    lodash "^4.17.15"
     lolex "2.3.2"
-    matrix-js-sdk "1.0.4"
+    matrix-js-sdk "2.2.0"
     optimist "^0.6.1"
     pako "^1.0.5"
+    png-chunks-extract "^1.0.0"
     prop-types "^15.5.8"
     qrcode-react "^0.1.16"
     qs "^6.6.0"
@@ -7304,6 +7301,13 @@ pluralizers@^0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/pluralizers/-/pluralizers-0.1.7.tgz#8d38dd0a1b660e739b10ab2eab10b684c9d50142"
   integrity sha512-mw6AejUiCaMQ6uPN9ObjJDTnR5AnBSmnHHy3uVTbxrSFSxO5scfwpTs8Dxyb6T2v7GSulhvOq+pm9y+hXUvtOA==
+
+png-chunks-extract@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/png-chunks-extract/-/png-chunks-extract-1.0.0.tgz#fad4a905e66652197351c65e35b92c64311e472d"
+  integrity sha1-+tSpBeZmUhlzUcZeNbksZDEeRy0=
+  dependencies:
+    crc-32 "^0.3.0"
 
 portfinder@^1.0.26:
   version "1.0.28"
