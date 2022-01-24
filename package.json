@@ -28,6 +28,10 @@
   },
   "style": "bundle.css",
   "matrix-react-parent": "matrix-react-sdk",
+  "scriptsComments": {
+    "scalingo-postbuild": "when present, this script is automatically run for building by scalingo. 'build' script will not be run.",
+    "build:scalingo": "specific to scalingo builds."
+  },
   "scripts": {
     "reskindex": "reskindex -h src/header",
     "reskindex:watch": "reskindex -h src/header -w",
@@ -44,10 +48,11 @@
     "build:electron:windows": "yarn build && build -w --ia32 --x64",
     "build:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk build",
     "build:js-sdk": "node scripts/yarn-sub.js matrix-js-sdk start:init",
-    "build:original": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
+    "build": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "build:dev": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle:dev",
     "build:scalingo": "yarn build:js-sdk && yarn install:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
-    "build": "scripts/package.sh",
+    "dist": "scripts/package.sh",
+    "scalingo-postbuild": "scripts/package-scalingo.sh",
     "install:electron": "install-app-deps",
     "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install && node scripts/yarn-sub.js matrix-react-sdk build",
     "electron": "yarn install:electron && electron .",
