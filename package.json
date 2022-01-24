@@ -30,7 +30,7 @@
   "matrix-react-parent": "matrix-react-sdk",
   "scriptsComments": {
     "scalingo-postbuild": "when present, this script is automatically run for building by scalingo. 'build' script will not be run.",
-    "build:scalingo": "specific to scalingo builds."
+    "build:scalingo": "specific to scalingo builds. Adds the yarn install step in dir node_modules/matrix-react-sdk."
   },
   "scripts": {
     "reskindex": "reskindex -h src/header",
@@ -50,11 +50,11 @@
     "build:js-sdk": "node scripts/yarn-sub.js matrix-js-sdk start:init",
     "build": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "build:dev": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle:dev",
-    "build:scalingo": "yarn build:js-sdk && yarn install:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
+    "build:scalingo": "yarn build:js-sdk && yarn install:react-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "dist": "scripts/package.sh",
     "scalingo-postbuild": "scripts/package-scalingo.sh",
     "install:electron": "install-app-deps",
-    "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install && node scripts/yarn-sub.js matrix-react-sdk build",
+    "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install",
     "electron": "yarn install:electron && electron .",
     "start:res": "node scripts/copy-res.js -w",
     "start:js": "webpack-dev-server --host=0.0.0.0 --output-filename=bundles/_dev_/[name].js --output-chunk-filename=bundles/_dev_/[name].js -w --progress --mode development",
