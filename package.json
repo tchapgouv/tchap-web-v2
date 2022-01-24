@@ -30,7 +30,12 @@
   "matrix-react-parent": "matrix-react-sdk",
   "scriptsComments": {
     "scalingo-postbuild": "when present, this script is automatically run for building by scalingo. 'build' script will not be run.",
-    "build:scalingo": "specific to scalingo builds. Adds the yarn install step in dir node_modules/matrix-react-sdk."
+    "build:scalingo": "specific to scalingo builds. Adds the yarn install step in dir node_modules/matrix-react-sdk.",
+    "reskindex": "builds the src/component-index.js file",
+    "build:react-sdk": "uses the yarn-sup script, which creates a subprocess, to run yarn build inside node_modules/matrix-react-sdk.",
+    "build:js-sdk": "uses the yarn-sup script, which creates a subprocess, to run yarn build inside node_modules/matrix-js-sdk.",
+    "build:bundle": "Uses webpack to build the /webapp folder where files are ready to be served by a file server (e.g. nginx).",
+    "dist": "Build and make a tar file with the output, in the /dist folder. It is the /webapp dir (see build:bundle), compressed."
   },
   "scripts": {
     "reskindex": "reskindex -h src/header",
