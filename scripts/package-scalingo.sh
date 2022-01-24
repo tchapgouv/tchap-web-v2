@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Tchap: File copied from scripts/package.json.
+
 set -e
 
 version=`node -e 'console.log(require("./package.json").version)'`
