@@ -23,8 +23,21 @@
     "test",
     "webpack.config.js"
   ],
+  "engines": {
+    "node": "14.17.3"
+  },
   "style": "bundle.css",
   "matrix-react-parent": "matrix-react-sdk",
+  "scriptsComments": {
+    "scalingo-postbuild": "when present, this script is automatically run for building by scalingo. 'build' script will not be run.",
+    "build:scalingo": "specific to scalingo builds. Adds the yarn install step in dir node_modules/matrix-react-sdk.",
+    "reskindex": "builds the src/component-index.js file",
+    "install:reack-sdk": "runs yarn install inside node_modules/matrix-react-sdk. The production=false flag is to force installation of devDependencies, which we need for the following build steps.",
+    "build:react-sdk": "uses the yarn-sub script, which creates a subprocess, to run yarn build inside node_modules/matrix-react-sdk.",
+    "build:js-sdk": "uses the yarn-sub script, which creates a subprocess, to run yarn build inside node_modules/matrix-js-sdk.",
+    "build:bundle": "Uses webpack to build the /webapp folder where files are ready to be served by a file server (e.g. nginx).",
+    "dist": "Build and make a tar file with the output, in the /dist folder. It is the /webapp dir (see build:bundle), compressed."
+  },
   "scripts": {
     "reskindex": "reskindex -h src/header",
     "reskindex:watch": "reskindex -h src/header -w",
@@ -43,8 +56,11 @@
     "build:js-sdk": "node scripts/yarn-sub.js matrix-js-sdk start:init",
     "build": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "build:dev": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle:dev",
+    "build:scalingo": "yarn build:js-sdk && yarn install:react-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "dist": "scripts/package.sh",
+    "scalingo-postbuild": "scripts/package-scalingo.sh",
     "install:electron": "install-app-deps",
+    "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install --production=false",
     "electron": "yarn install:electron && electron .",
     "start:res": "node scripts/copy-res.js -w",
     "start:js": "webpack-dev-server --host=0.0.0.0 --output-filename=bundles/_dev_/[name].js --output-chunk-filename=bundles/_dev_/[name].js -w --progress --mode development",
@@ -73,8 +89,8 @@
     "gemini-scrollbar": "github:matrix-org/gemini-scrollbar#b302279",
     "gfm.css": "^1.1.2",
     "highlight.js": "^9.13.1",
-    "matrix-js-sdk": "1.0.4",
-    "matrix-react-sdk": "1.0.7",
+    "matrix-js-sdk": "github:tchapgouv/matrix-js-sdk#DINSIC_develop",
+    "matrix-react-sdk": "github:tchapgouv/matrix-react-sdk#develop",
     "modernizr": "^3.6.0",
     "olm": "https://gitlab.matrix.org/api/v4/projects/27/packages/npm/@matrix-org/olm/-/@matrix-org/olm-3.2.8.tgz",
     "prop-types": "^15.6.2",
