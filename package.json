@@ -33,8 +33,8 @@
     "build:scalingo": "specific to scalingo builds. Adds the yarn install step in dir node_modules/matrix-react-sdk.",
     "reskindex": "builds the src/component-index.js file",
     "install:reack-sdk": "runs yarn install inside node_modules/matrix-react-sdk. The production=false flag is to force installation of devDependencies, which we need for the following build steps.",
-    "build:react-sdk": "uses the yarn-sup script, which creates a subprocess, to run yarn build inside node_modules/matrix-react-sdk.",
-    "build:js-sdk": "uses the yarn-sup script, which creates a subprocess, to run yarn build inside node_modules/matrix-js-sdk.",
+    "build:react-sdk": "uses the yarn-sub script, which creates a subprocess, to run yarn build inside node_modules/matrix-react-sdk.",
+    "build:js-sdk": "uses the yarn-sub script, which creates a subprocess, to run yarn build inside node_modules/matrix-js-sdk.",
     "build:bundle": "Uses webpack to build the /webapp folder where files are ready to be served by a file server (e.g. nginx).",
     "dist": "Build and make a tar file with the output, in the /dist folder. It is the /webapp dir (see build:bundle), compressed."
   },
