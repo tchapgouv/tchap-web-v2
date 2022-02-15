@@ -30,7 +30,7 @@ describe("AutoDiscovery", function() {
     let httpBackend = null;
 
     beforeEach(function() {
-        utils.beforeEach(this); // eslint-disable-line no-invalid-this
+        utils.beforeEach(this); // eslint-disable-line babel/no-invalid-this
         httpBackend = new MockHttpBackend();
         sdk.request(httpBackend.requestFn);
     });
@@ -94,7 +94,7 @@ describe("AutoDiscovery", function() {
                 const expected = {
                     "m.homeserver": {
                         state: "FAIL_PROMPT",
-                        error: AutoDiscovery.ERROR_GENERIC_FAILURE,
+                        error: AutoDiscovery.ERROR_INVALID,
                         base_url: null,
                     },
                     "m.identity_server": {
@@ -117,7 +117,7 @@ describe("AutoDiscovery", function() {
                 const expected = {
                     "m.homeserver": {
                         state: "FAIL_PROMPT",
-                        error: AutoDiscovery.ERROR_GENERIC_FAILURE,
+                        error: AutoDiscovery.ERROR_INVALID,
                         base_url: null,
                     },
                     "m.identity_server": {
@@ -140,7 +140,7 @@ describe("AutoDiscovery", function() {
                 const expected = {
                     "m.homeserver": {
                         state: "FAIL_PROMPT",
-                        error: AutoDiscovery.ERROR_GENERIC_FAILURE,
+                        error: AutoDiscovery.ERROR_INVALID,
                         base_url: null,
                     },
                     "m.identity_server": {
@@ -163,7 +163,7 @@ describe("AutoDiscovery", function() {
                 const expected = {
                     "m.homeserver": {
                         state: "FAIL_PROMPT",
-                        error: AutoDiscovery.ERROR_GENERIC_FAILURE,
+                        error: AutoDiscovery.ERROR_INVALID,
                         base_url: null,
                     },
                     "m.identity_server": {
@@ -191,7 +191,7 @@ describe("AutoDiscovery", function() {
                 const expected = {
                     "m.homeserver": {
                         state: "FAIL_PROMPT",
-                        error: AutoDiscovery.ERROR_GENERIC_FAILURE,
+                        error: AutoDiscovery.ERROR_INVALID_HS_BASE_URL,
                         base_url: null,
                     },
                     "m.identity_server": {
@@ -217,7 +217,7 @@ describe("AutoDiscovery", function() {
                 const expected = {
                     "m.homeserver": {
                         state: "FAIL_PROMPT",
-                        error: AutoDiscovery.ERROR_GENERIC_FAILURE,
+                        error: AutoDiscovery.ERROR_INVALID_HS_BASE_URL,
                         base_url: null,
                     },
                     "m.identity_server": {
@@ -275,7 +275,7 @@ describe("AutoDiscovery", function() {
                     "m.homeserver": {
                         state: "FAIL_ERROR",
                         error: AutoDiscovery.ERROR_INVALID_HOMESERVER,
-                        base_url: null,
+                        base_url: "https://example.org",
                     },
                     "m.identity_server": {
                         state: "PROMPT",
@@ -304,7 +304,7 @@ describe("AutoDiscovery", function() {
                     "m.homeserver": {
                         state: "FAIL_ERROR",
                         error: AutoDiscovery.ERROR_INVALID_HOMESERVER,
-                        base_url: null,
+                        base_url: "https://example.org",
                     },
                     "m.identity_server": {
                         state: "PROMPT",
@@ -335,7 +335,7 @@ describe("AutoDiscovery", function() {
                     "m.homeserver": {
                         state: "FAIL_ERROR",
                         error: AutoDiscovery.ERROR_INVALID_HOMESERVER,
-                        base_url: null,
+                        base_url: "https://example.org",
                     },
                     "m.identity_server": {
                         state: "PROMPT",
@@ -528,7 +528,7 @@ describe("AutoDiscovery", function() {
                     "m.identity_server": {
                         state: "FAIL_ERROR",
                         error: AutoDiscovery.ERROR_INVALID_IDENTITY_SERVER,
-                        base_url: null,
+                        base_url: "https://identity.example.org",
                     },
                 };
 
@@ -569,7 +569,7 @@ describe("AutoDiscovery", function() {
                     "m.identity_server": {
                         state: "FAIL_ERROR",
                         error: AutoDiscovery.ERROR_INVALID_IDENTITY_SERVER,
-                        base_url: null,
+                        base_url: "https://identity.example.org",
                     },
                 };
 

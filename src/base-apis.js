@@ -151,13 +151,14 @@ MatrixBaseApis.prototype.isUsernameAvailable = function(username) {
  *     threepid uses during registration in the ID server. Set 'msisdn' to
  *     true to bind msisdn.
  * @param {string} guestAccessToken
+ * @param {string} inhibitLogin
  * @param {module:client.callback} callback Optional.
  * @return {module:client.Promise} Resolves: TODO
  * @return {module:http-api.MatrixError} Rejects: with an error response.
  */
 MatrixBaseApis.prototype.register = function(
     username, password,
-    sessionId, auth, bindThreepids, guestAccessToken,
+    sessionId, auth, bindThreepids, guestAccessToken, inhibitLogin,
     callback,
 ) {
     // backwards compat
@@ -165,6 +166,10 @@ MatrixBaseApis.prototype.register = function(
         bindThreepids = {email: true};
     } else if (bindThreepids === null || bindThreepids === undefined) {
         bindThreepids = {};
+    }
+    if (typeof inhibitLogin === 'function') {
+        callback = inhibitLogin;
+        inhibitLogin = undefined;
     }
 
     if (auth === undefined || auth === null) {
@@ -191,6 +196,9 @@ MatrixBaseApis.prototype.register = function(
     }
     if (guestAccessToken !== undefined && guestAccessToken !== null) {
         params.guest_access_token = guestAccessToken;
+    }
+    if (inhibitLogin !== undefined && inhibitLogin !== null) {
+        params.inhibit_login = inhibitLogin;
     }
     // Temporary parameter added to make the register endpoint advertise
     // msisdn flows. This exists because there are clients that break
@@ -263,8 +271,7 @@ MatrixBaseApis.prototype.login = function(loginType, data, callback) {
 
     return this._http.authedRequest(
         (error, response) => {
-            if (loginType === "m.login.password" && response &&
-                response.access_token && response.user_id) {
+            if (response && response.access_token && response.user_id) {
                 this._http.opts.accessToken = response.access_token;
                 this.credentials = {
                     userId: response.user_id,
@@ -384,9 +391,8 @@ MatrixBaseApis.prototype.deactivateAccount = function(auth, erase) {
         body.erase = erase;
     }
 
-    return this._http.authedRequestWithPrefix(
+    return this._http.authedRequest(
         undefined, "POST", '/account/deactivate', undefined, body,
-        httpApi.PREFIX_R0,
     );
 };
 
@@ -430,6 +436,35 @@ MatrixBaseApis.prototype.createRoom = function(options, callback) {
     return this._http.authedRequest(
         callback, "POST", "/createRoom", undefined, options,
     );
+};
+/**
+ * Fetches relations for a given event
+ * @param {string} roomId the room of the event
+ * @param {string} eventId the id of the event
+ * @param {string} relationType the rel_type of the relations requested
+ * @param {string} eventType the event type of the relations requested
+ * @param {Object} opts options with optional values for the request.
+ * @param {Object} opts.from the pagination token returned from a previous request as `next_batch` to return following relations.
+ * @return {Object} the response, with chunk and next_batch.
+ */
+MatrixBaseApis.prototype.fetchRelations =
+    async function(roomId, eventId, relationType, eventType, opts) {
+    const queryParams = {};
+    if (opts.from) {
+        queryParams.from = opts.from;
+    }
+    const queryString = utils.encodeParams(queryParams);
+    const path = utils.encodeUri(
+        "/rooms/$roomId/relations/$eventId/$relationType/$eventType?" + queryString, {
+            $roomId: roomId,
+            $eventId: eventId,
+            $relationType: relationType,
+            $eventType: eventType,
+        });
+    const response = await this._http.authedRequestWithPrefix(
+        undefined, "GET", path, null, null, httpApi.PREFIX_UNSTABLE,
+    );
+    return response;
 };
 
 /**
@@ -890,32 +925,6 @@ MatrixBaseApis.prototype.sendStateEvent = function(roomId, eventType, content, s
 
 /**
  * @param {string} roomId
- * @param {string} eventId
- * @param {string} [txnId]  transaction id. One will be made up if not
- *    supplied.
- * @param {module:client.callback} callback Optional.
- * @return {module:client.Promise} Resolves: TODO
- * @return {module:http-api.MatrixError} Rejects: with an error response.
- */
-MatrixBaseApis.prototype.redactEvent = function(
-    roomId, eventId, txnId, callback,
-) {
-    if (arguments.length === 3) {
-        callback = txnId;
-    }
-
-    const path = utils.encodeUri("/rooms/$roomId/redact/$eventId/$tnxId", {
-        $roomId: roomId,
-        $eventId: eventId,
-        $txnId: txnId ? txnId : this.makeTxnId(),
-    });
-
-    return this._http.authedRequest(callback, "PUT", path, undefined, {});
-};
-
-
-/**
- * @param {string} roomId
  * @param {Number} limit
  * @param {module:client.callback} callback Optional.
  * @return {module:client.Promise} Resolves: TODO
@@ -1319,9 +1328,7 @@ MatrixBaseApis.prototype.deleteThreePid = function(medium, address) {
         'medium': medium,
         'address': address,
     };
-    return this._http.authedRequestWithPrefix(
-        undefined, "POST", path, null, data, httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(undefined, "POST", path, null, data);
 };
 
 /**
@@ -1354,10 +1361,8 @@ MatrixBaseApis.prototype.setPassword = function(authDict, newPassword, callback)
  * @return {module:http-api.MatrixError} Rejects: with an error response.
  */
 MatrixBaseApis.prototype.getDevices = function() {
-    const path = "/devices";
-    return this._http.authedRequestWithPrefix(
-        undefined, "GET", path, undefined, undefined,
-        httpApi.PREFIX_UNSTABLE,
+    return this._http.authedRequest(
+        undefined, 'GET', "/devices", undefined, undefined,
     );
 };
 
@@ -1374,11 +1379,7 @@ MatrixBaseApis.prototype.setDeviceDetails = function(device_id, body) {
         $device_id: device_id,
     });
 
-
-    return this._http.authedRequestWithPrefix(
-        undefined, "PUT", path, undefined, body,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(undefined, "PUT", path, undefined, body);
 };
 
 /**
@@ -1400,10 +1401,7 @@ MatrixBaseApis.prototype.deleteDevice = function(device_id, auth) {
         body.auth = auth;
     }
 
-    return this._http.authedRequestWithPrefix(
-        undefined, "DELETE", path, undefined, body,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(undefined, "DELETE", path, undefined, body);
 };
 
 /**
@@ -1421,10 +1419,8 @@ MatrixBaseApis.prototype.deleteMultipleDevices = function(devices, auth) {
         body.auth = auth;
     }
 
-    return this._http.authedRequestWithPrefix(
-        undefined, "POST", "/delete_devices", undefined, body,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    const path = "/delete_devices";
+    return this._http.authedRequest(undefined, "POST", path, undefined, body);
 };
 
 
@@ -1600,9 +1596,7 @@ MatrixBaseApis.prototype.uploadKeysRequest = function(content, opts, callback) {
     } else {
         path = "/keys/upload";
     }
-    return this._http.authedRequestWithPrefix(
-        callback, "POST", path, undefined, content, httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(callback, "POST", path, undefined, content);
 };
 
 /**
@@ -1637,10 +1631,7 @@ MatrixBaseApis.prototype.downloadKeysForUsers = function(userIds, opts) {
         content.device_keys[u] = {};
     });
 
-    return this._http.authedRequestWithPrefix(
-        undefined, "POST", "/keys/query", undefined, content,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(undefined, "POST", "/keys/query", undefined, content);
 };
 
 /**
@@ -1668,10 +1659,8 @@ MatrixBaseApis.prototype.claimOneTimeKeys = function(devices, key_algorithm) {
         query[deviceId] = key_algorithm;
     }
     const content = {one_time_keys: queries};
-    return this._http.authedRequestWithPrefix(
-        undefined, "POST", "/keys/claim", undefined, content,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    const path = "/keys/claim";
+    return this._http.authedRequest(undefined, "POST", path, undefined, content);
 };
 
 /**
@@ -1690,10 +1679,8 @@ MatrixBaseApis.prototype.getKeyChanges = function(oldToken, newToken) {
         to: newToken,
     };
 
-    return this._http.authedRequestWithPrefix(
-        undefined, "GET", "/keys/changes", qps, undefined,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    const path = "/keys/changes";
+    return this._http.authedRequest(undefined, "GET", path, qps, undefined);
 };
 
 
@@ -1811,10 +1798,7 @@ MatrixBaseApis.prototype.sendToDevice = function(
         messages: contentMap,
     };
 
-    return this._http.authedRequestWithPrefix(
-        undefined, "PUT", path, undefined, body,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(undefined, "PUT", path, undefined, body);
 };
 
 // Third party Lookup API
@@ -1826,9 +1810,8 @@ MatrixBaseApis.prototype.sendToDevice = function(
  * @return {module:client.Promise} Resolves to the result object
  */
 MatrixBaseApis.prototype.getThirdpartyProtocols = function() {
-    return this._http.authedRequestWithPrefix(
+    return this._http.authedRequest(
         undefined, "GET", "/thirdparty/protocols", undefined, undefined,
-        httpApi.PREFIX_UNSTABLE,
     ).then((response) => {
         // sanity check
         if (!response || typeof(response) !== 'object') {
@@ -1853,10 +1836,7 @@ MatrixBaseApis.prototype.getThirdpartyLocation = function(protocol, params) {
         $protocol: protocol,
     });
 
-    return this._http.authedRequestWithPrefix(
-        undefined, "GET", path, params, undefined,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(undefined, "GET", path, params, undefined);
 };
 
 /**
@@ -1872,10 +1852,7 @@ MatrixBaseApis.prototype.getThirdpartyUser = function(protocol, params) {
         $protocol: protocol,
     });
 
-    return this._http.authedRequestWithPrefix(
-        undefined, "GET", path, params, undefined,
-        httpApi.PREFIX_UNSTABLE,
-    );
+    return this._http.authedRequest(undefined, "GET", path, params, undefined);
 };
 
 /**
