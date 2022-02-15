@@ -6104,22 +6104,6 @@ math-random@^1.0.1:
     request "^2.88.0"
     unhomoglyph "^1.0.2"
 
-matrix-js-sdk@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/matrix-js-sdk/-/matrix-js-sdk-2.2.0.tgz#c96a2caa4c92e5998443027579d7e76d4bcd4d21"
-  integrity sha512-gab7wuscgTKbXY5x136t9qSnDbOuq785ezd++NoFLEau0YjDos0YKolAm0TValUC9LY30CoVqqMfyPJ68CMezQ==
-  dependencies:
-    another-json "^0.2.0"
-    babel-runtime "^6.26.0"
-    bluebird "^3.5.0"
-    browser-request "^0.3.3"
-    bs58 "^4.0.1"
-    content-type "^1.0.2"
-    loglevel "1.6.1"
-    qs "^6.5.2"
-    request "^2.88.0"
-    unhomoglyph "^1.0.2"
-
 matrix-mock-request@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/matrix-mock-request/-/matrix-mock-request-1.2.3.tgz#56b15d86e2601a9b48a854844396d18caab649c8"
