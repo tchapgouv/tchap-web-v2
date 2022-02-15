@@ -13,11 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+import logger from '../../../../src/logger';
 
 try {
     global.Olm = require('olm');
 } catch (e) {
-    console.warn("unable to run device verification tests: libolm not available");
+    logger.warn("unable to run device verification tests: libolm not available");
 }
 
 import expect from 'expect';
@@ -32,7 +33,7 @@ import {makeTestClients} from './util';
 
 describe("verification request", function() {
     if (!global.Olm) {
-        console.warn('Not running device verification unit tests: libolm not present');
+        logger.warn('Not running device verification unit tests: libolm not present');
         return;
     }
 
@@ -68,8 +69,14 @@ describe("verification request", function() {
         bob.on("crypto.verification.request", (request) => {
             const bobVerifier = request.beginKeyVerification(verificationMethods.SAS);
             bobVerifier.verify();
+
+            // XXX: Private function access (but it's a test, so we're okay)
+            bobVerifier._endTimer();
         });
         const aliceVerifier = await alice.requestVerification("@bob:example.com");
         expect(aliceVerifier).toBeAn(SAS);
+
+        // XXX: Private function access (but it's a test, so we're okay)
+        aliceVerifier._endTimer();
     });
 });

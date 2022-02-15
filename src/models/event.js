@@ -24,13 +24,14 @@ limitations under the License.
 import Promise from 'bluebird';
 import {EventEmitter} from 'events';
 import utils from '../utils.js';
+import logger from '../../src/logger';
 
 /**
  * Enum for event statuses.
  * @readonly
  * @enum {string}
  */
-module.exports.EventStatus = {
+const EventStatus = {
     /** The event was not sent and will no longer be retried. */
     NOT_SENT: "not_sent",
 
@@ -48,8 +49,15 @@ module.exports.EventStatus = {
     /** The event was cancelled before it was successfully sent. */
     CANCELLED: "cancelled",
 };
+module.exports.EventStatus = EventStatus;
 
 const interns = {};
+function intern(str) {
+    if (!interns[str]) {
+        interns[str] = str;
+    }
+    return interns[str];
+}
 
 /**
  * Construct a Matrix Event object
@@ -87,20 +95,25 @@ module.exports.MatrixEvent = function MatrixEvent(
         if (!event[prop]) {
             return;
         }
-        if (!interns[event[prop]]) {
-            interns[event[prop]] = event[prop];
-        }
-        event[prop] = interns[event[prop]];
+        event[prop] = intern(event[prop]);
     });
 
     ["membership", "avatar_url", "displayname"].forEach((prop) => {
         if (!event.content || !event.content[prop]) {
             return;
         }
-        if (!interns[event.content[prop]]) {
-            interns[event.content[prop]] = event.content[prop];
+        event.content[prop] = intern(event.content[prop]);
+    });
+
+    ["rel_type"].forEach((prop) => {
+        if (
+            !event.content ||
+            !event.content["m.relates_to"] ||
+            !event.content["m.relates_to"][prop]
+        ) {
+            return;
         }
-        event.content[prop] = interns[event.content[prop]];
+        event.content["m.relates_to"][prop] = intern(event.content["m.relates_to"][prop]);
     });
 
     this.event = event || {};
@@ -111,6 +124,9 @@ module.exports.MatrixEvent = function MatrixEvent(
     this.error = null;
     this.forwardLooking = true;
     this._pushActions = null;
+    this._replacingEvent = null;
+    this._localRedactionEvent = null;
+    this._isCancelled = false;
 
     this._clearEvent = {};
 
@@ -209,12 +225,33 @@ utils.extend(module.exports.MatrixEvent.prototype, {
     },
 
     /**
-     * Get the (decrypted, if necessary) event content JSON.
+     * Get the (decrypted, if necessary) event content JSON, even if the event
+     * was replaced by another event.
+     *
+     * @return {Object} The event content JSON, or an empty object.
+     */
+    getOriginalContent: function() {
+        if (this._localRedactionEvent) {
+            return {};
+        }
+        return this._clearEvent.content || this.event.content || {};
+    },
+
+    /**
+     * Get the (decrypted, if necessary) event content JSON,
+     * or the content from the replacing event, if any.
+     * See `makeReplaced`.
      *
      * @return {Object} The event content JSON, or an empty object.
      */
     getContent: function() {
-        return this._clearEvent.content || this.event.content || {};
+        if (this._localRedactionEvent) {
+            return {};
+        } else if (this._replacingEvent) {
+            return this._replacingEvent.getContent()["m.new_content"] || {};
+        } else {
+            return this.getOriginalContent();
+        }
     },
 
     /**
@@ -352,7 +389,7 @@ utils.extend(module.exports.MatrixEvent.prototype, {
 
         if (
             this._clearEvent && this._clearEvent.content &&
-                this._clearEvent.content.msgtype !== "m.bad.encrypted"
+            this._clearEvent.content.msgtype !== "m.bad.encrypted"
         ) {
             // we may want to just ignore this? let's start with rejecting it.
             throw new Error(
@@ -367,7 +404,7 @@ utils.extend(module.exports.MatrixEvent.prototype, {
         // new info.
         //
         if (this._decryptionPromise) {
-            console.log(
+            logger.log(
                 `Event ${this.getId()} already being decrypted; queueing a retry`,
             );
             this._retryDecryption = true;
@@ -441,7 +478,7 @@ utils.extend(module.exports.MatrixEvent.prototype, {
                 if (e.name !== "DecryptionError") {
                     // not a decryption error: log the whole exception as an error
                     // (and don't bother with a retry)
-                    console.error(
+                    logger.error(
                         `Error decrypting event (id=${this.getId()}): ${e.stack || e}`,
                     );
                     this._decryptionPromise = null;
@@ -467,7 +504,7 @@ utils.extend(module.exports.MatrixEvent.prototype, {
                 //
                 if (this._retryDecryption) {
                     // decryption error, but we have a retry queued.
-                    console.log(
+                    logger.log(
                         `Got error decrypting event (id=${this.getId()}: ` +
                         `${e}), but retrying`,
                     );
@@ -476,7 +513,7 @@ utils.extend(module.exports.MatrixEvent.prototype, {
 
                 // decryption error, no retries queued. Warn about the error and
                 // set it to m.bad.encrypted.
-                console.warn(
+                logger.warn(
                     `Error decrypting event (id=${this.getId()}): ${e.detailedString}`,
                 );
 
@@ -637,6 +674,27 @@ utils.extend(module.exports.MatrixEvent.prototype, {
         return this.event.unsigned || {};
     },
 
+    unmarkLocallyRedacted: function() {
+        const value = this._localRedactionEvent;
+        this._localRedactionEvent = null;
+        if (this.event.unsigned) {
+            this.event.unsigned.redacted_because = null;
+        }
+        return !!value;
+    },
+
+    markLocallyRedacted: function(redactionEvent) {
+        if (this._localRedactionEvent) {
+            return;
+        }
+        this.emit("Event.beforeRedaction", this, redactionEvent);
+        this._localRedactionEvent = redactionEvent;
+        if (!this.event.unsigned) {
+            this.event.unsigned = {};
+        }
+        this.event.unsigned.redacted_because = redactionEvent.event;
+    },
+
     /**
      * Update the content of an event in the same way it would be by the server
      * if it were redacted before it was sent to us
@@ -650,6 +708,11 @@ utils.extend(module.exports.MatrixEvent.prototype, {
             throw new Error("invalid redaction_event in makeRedacted");
         }
 
+        this._localRedactionEvent = null;
+
+        this.emit("Event.beforeRedaction", this, redaction_event);
+
+        this._replacingEvent = null;
         // we attempt to replicate what we would see from the server if
         // the event had been redacted before we saw it.
         //
@@ -693,39 +756,304 @@ utils.extend(module.exports.MatrixEvent.prototype, {
     },
 
     /**
+     * Check if this event is a redaction of another event
+     *
+     * @return {boolean} True if this event is a redaction
+     */
+    isRedaction: function() {
+        return this.getType() === "m.room.redaction";
+    },
+
+    /**
      * Get the push actions, if known, for this event
      *
      * @return {?Object} push actions
      */
-     getPushActions: function() {
+    getPushActions: function() {
         return this._pushActions;
-     },
+    },
 
     /**
      * Set the push actions for this event.
      *
      * @param {Object} pushActions push actions
      */
-     setPushActions: function(pushActions) {
+    setPushActions: function(pushActions) {
         this._pushActions = pushActions;
-     },
+    },
 
-     /**
-      * Replace the `event` property and recalculate any properties based on it.
-      * @param {Object} event the object to assign to the `event` property
-      */
-     handleRemoteEcho: function(event) {
+    /**
+     * Replace the `event` property and recalculate any properties based on it.
+     * @param {Object} event the object to assign to the `event` property
+     */
+    handleRemoteEcho: function(event) {
+        const oldUnsigned = this.getUnsigned();
+        const oldId = this.getId();
         this.event = event;
+        // if this event was redacted before it was sent, it's locally marked as redacted.
+        // At this point, we've received the remote echo for the event, but not yet for
+        // the redaction that we are sending ourselves. Preserve the locally redacted
+        // state by copying over redacted_because so we don't get a flash of
+        // redacted, not-redacted, redacted as remote echos come in
+        if (oldUnsigned.redacted_because) {
+            if (!this.event.unsigned) {
+                this.event.unsigned = {};
+            }
+            this.event.unsigned.redacted_because = oldUnsigned.redacted_because;
+        }
         // successfully sent.
-        this.status = null;
-     },
+        this.setStatus(null);
+        if (this.getId() !== oldId) {
+            // emit the event if it changed
+            this.emit("Event.localEventIdReplaced", this);
+        }
+    },
+
+    /**
+     * Whether the event is in any phase of sending, send failure, waiting for
+     * remote echo, etc.
+     *
+     * @return {boolean}
+     */
+    isSending() {
+        return !!this.status;
+    },
+
+    /**
+     * Update the event's sending status and emit an event as well.
+     *
+     * @param {String} status The new status
+     */
+    setStatus(status) {
+        this.status = status;
+        this.emit("Event.status", this, status);
+    },
+
+    replaceLocalEventId(eventId) {
+        this.event.event_id = eventId;
+        this.emit("Event.localEventIdReplaced", this);
+    },
+
+    /**
+     * Get whether the event is a relation event, and of a given type if
+     * `relType` is passed in.
+     *
+     * @param {string?} relType if given, checks that the relation is of the
+     * given type
+     * @return {boolean}
+     */
+    isRelation(relType = undefined) {
+        // Relation info is lifted out of the encrypted content when sent to
+        // encrypted rooms, so we have to check `getWireContent` for this.
+        const content = this.getWireContent();
+        const relation = content && content["m.relates_to"];
+        return relation && relation.rel_type && relation.event_id &&
+            ((relType && relation.rel_type === relType) || !relType);
+    },
+
+    /**
+     * Get relation info for the event, if any.
+     *
+     * @return {Object}
+     */
+    getRelation() {
+        if (!this.isRelation()) {
+            return null;
+        }
+        return this.getWireContent()["m.relates_to"];
+    },
+
+    /**
+     * Set an event that replaces the content of this event, through an m.replace relation.
+     *
+     * @param {MatrixEvent?} newEvent the event with the replacing content, if any.
+     */
+    makeReplaced(newEvent) {
+        // don't allow redacted events to be replaced.
+        // if newEvent is null we allow to go through though,
+        // as with local redaction, the replacing event might get
+        // cancelled, which should be reflected on the target event.
+        if (this.isRedacted() && newEvent) {
+            return;
+        }
+        if (this._replacingEvent !== newEvent) {
+            this._replacingEvent = newEvent;
+            this.emit("Event.replaced", this);
+        }
+    },
+
+    /**
+     * Returns the status of any associated edit or redaction
+     * (not for reactions/annotations as their local echo doesn't affect the orignal event),
+     * or else the status of the event.
+     *
+     * @return {EventStatus}
+     */
+    getAssociatedStatus() {
+        if (this._replacingEvent) {
+            return this._replacingEvent.status;
+        } else if (this._localRedactionEvent) {
+            return this._localRedactionEvent.status;
+        }
+        return this.status;
+    },
+
+    getServerAggregatedRelation(relType) {
+        const relations = this.getUnsigned()["m.relations"];
+        if (relations) {
+            return relations[relType];
+        }
+    },
+
+    /**
+     * Returns the event ID of the event replacing the content of this event, if any.
+     *
+     * @return {string?}
+     */
+    replacingEventId() {
+        const replaceRelation = this.getServerAggregatedRelation("m.replace");
+        if (replaceRelation) {
+            return replaceRelation.event_id;
+        } else if (this._replacingEvent) {
+            return this._replacingEvent.getId();
+        }
+    },
+
+    /**
+     * Returns the event replacing the content of this event, if any.
+     * Replacements are aggregated on the server, so this would only
+     * return an event in case it came down the sync, or for local echo of edits.
+     *
+     * @return {MatrixEvent?}
+     */
+    replacingEvent() {
+        return this._replacingEvent;
+    },
+
+    /**
+     * Returns the origin_server_ts of the event replacing the content of this event, if any.
+     *
+     * @return {Date?}
+     */
+    replacingEventDate() {
+        const replaceRelation = this.getServerAggregatedRelation("m.replace");
+        if (replaceRelation) {
+            const ts = replaceRelation.origin_server_ts;
+            if (Number.isFinite(ts)) {
+                return new Date(ts);
+            }
+        } else if (this._replacingEvent) {
+            return this._replacingEvent.getDate();
+        }
+    },
+
+    /**
+     * Returns the event that wants to redact this event, but hasn't been sent yet.
+     * @return {MatrixEvent} the event
+     */
+    localRedactionEvent() {
+        return this._localRedactionEvent;
+    },
+
+    /**
+     * For relations and redactions, returns the event_id this event is referring to.
+     *
+     * @return {string?}
+     */
+    getAssociatedId() {
+        const relation = this.getRelation();
+        if (relation) {
+            return relation.event_id;
+        } else if (this.isRedaction()) {
+            return this.event.redacts;
+        }
+    },
+
+    /**
+     * Checks if this event is associated with another event. See `getAssociatedId`.
+     *
+     * @return {bool}
+     */
+    hasAssocation() {
+        return !!this.getAssociatedId();
+    },
+
+    /**
+     * Update the related id with a new one.
+     *
+     * Used to replace a local id with remote one before sending
+     * an event with a related id.
+     *
+     * @param {string} eventId the new event id
+     */
+    updateAssociatedId(eventId) {
+        const relation = this.getRelation();
+        if (relation) {
+            relation.event_id = eventId;
+        } else if (this.isRedaction()) {
+            this.event.redacts = eventId;
+        }
+    },
+
+    /**
+     * Flags an event as cancelled due to future conditions. For example, a verification
+     * request event in the same sync transaction may be flagged as cancelled to warn
+     * listeners that a cancellation event is coming down the same pipe shortly.
+     * @param {boolean} cancelled Whether the event is to be cancelled or not.
+     */
+    flagCancelled(cancelled = true) {
+        this._isCancelled = cancelled;
+    },
+
+    /**
+     * Gets whether or not the event is flagged as cancelled. See flagCancelled() for
+     * more information.
+     * @returns {boolean} True if the event is cancelled, false otherwise.
+     */
+    isCancelled() {
+        return this._isCancelled;
+    },
+
+    /**
+     * Summarise the event as JSON for debugging. If encrypted, include both the
+     * decrypted and encrypted view of the event. This is named `toJSON` for use
+     * with `JSON.stringify` which checks objects for functions named `toJSON`
+     * and will call them to customise the output if they are defined.
+     *
+     * @return {Object}
+     */
+    toJSON() {
+        const event = {
+            type: this.getType(),
+            sender: this.getSender(),
+            content: this.getContent(),
+            event_id: this.getId(),
+            origin_server_ts: this.getTs(),
+            unsigned: this.getUnsigned(),
+            room_id: this.getRoomId(),
+        };
+
+        // if this is a redaction then attach the redacts key
+        if (this.isRedaction()) {
+            event.redacts = this.event.redacts;
+        }
+
+        if (!this.isEncrypted()) {
+            return event;
+        }
+
+        return {
+            decrypted: event,
+            encrypted: this.event,
+        };
+    },
 });
 
 
 /* _REDACT_KEEP_KEY_MAP gives the keys we keep when an event is redacted
  *
  * This is specified here:
- *  http://matrix.org/speculator/spec/HEAD/client_server/unstable.html#redactions
+ *  http://matrix.org/speculator/spec/HEAD/client_server/latest.html#redactions
  *
  * Also:
  *  - We keep 'unsigned' since that is created by the local server

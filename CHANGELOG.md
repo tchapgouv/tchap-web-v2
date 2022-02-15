@@ -1,3 +1,272 @@
+Changes in [2.2.0](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.2.0) (2019-07-18)
+================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.2.0-rc.2...v2.2.0)
+
+ * Upgrade lodash dependencies
+
+Changes in [2.2.0-rc.2](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.2.0-rc.2) (2019-07-12)
+==========================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.2.0-rc.1...v2.2.0-rc.2)
+
+ * Fix regression from 2.2.0-rc.1 in request to /devices
+   [\#995](https://github.com/matrix-org/matrix-js-sdk/pull/995)
+
+Changes in [2.2.0-rc.1](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.2.0-rc.1) (2019-07-12)
+==========================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.1.1...v2.2.0-rc.1)
+
+ * End the verification timer when verification is done
+   [\#993](https://github.com/matrix-org/matrix-js-sdk/pull/993)
+ * Stabilize usage of stably stable APIs (in a stable way)
+   [\#990](https://github.com/matrix-org/matrix-js-sdk/pull/990)
+ * Expose original_event for /relations
+   [\#987](https://github.com/matrix-org/matrix-js-sdk/pull/987)
+ * Process ephemeral events outside timeline handling
+   [\#989](https://github.com/matrix-org/matrix-js-sdk/pull/989)
+ * Don't accept any locally known edits earlier than the last known server-side
+   aggregated edit
+   [\#986](https://github.com/matrix-org/matrix-js-sdk/pull/986)
+ * Get edit date transparently from server aggregations or local echo
+   [\#984](https://github.com/matrix-org/matrix-js-sdk/pull/984)
+ * Add a function to flag keys for backup without scheduling a backup
+   [\#982](https://github.com/matrix-org/matrix-js-sdk/pull/982)
+ * Block read marker and read receipt from advancing into pending events
+   [\#981](https://github.com/matrix-org/matrix-js-sdk/pull/981)
+ * Upgrade dependencies
+   [\#977](https://github.com/matrix-org/matrix-js-sdk/pull/977)
+ * Add default push rule to ignore reactions
+   [\#976](https://github.com/matrix-org/matrix-js-sdk/pull/976)
+ * Fix exception whilst syncing
+   [\#979](https://github.com/matrix-org/matrix-js-sdk/pull/979)
+ * Include the error object when raising Session.logged_out
+   [\#975](https://github.com/matrix-org/matrix-js-sdk/pull/975)
+
+Changes in [2.1.1](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.1.1) (2019-07-11)
+================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.1.0...v2.1.1)
+
+ * Process emphemeral events outside timeline handling
+   [\#989](https://github.com/matrix-org/matrix-js-sdk/pull/989)
+
+Changes in [2.1.0](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.1.0) (2019-07-08)
+================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.1.0-rc.1...v2.1.0)
+
+ * Fix exception whilst syncing
+   [\#979](https://github.com/matrix-org/matrix-js-sdk/pull/979)
+
+Changes in [2.1.0-rc.1](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.1.0-rc.1) (2019-07-03)
+==========================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.0.1...v2.1.0-rc.1)
+
+ * Handle self read receipts for fixing e2e notification counts
+   [\#974](https://github.com/matrix-org/matrix-js-sdk/pull/974)
+ * Add redacts field to event.toJSON
+   [\#973](https://github.com/matrix-org/matrix-js-sdk/pull/973)
+ * Handle associated event send failures
+   [\#972](https://github.com/matrix-org/matrix-js-sdk/pull/972)
+ * Remove irrelevant debug line from timeline handling
+   [\#971](https://github.com/matrix-org/matrix-js-sdk/pull/971)
+ * Handle relations in encrypted rooms
+   [\#969](https://github.com/matrix-org/matrix-js-sdk/pull/969)
+ * Relations endpoint support
+   [\#967](https://github.com/matrix-org/matrix-js-sdk/pull/967)
+ * Disable event encryption for reactions
+   [\#968](https://github.com/matrix-org/matrix-js-sdk/pull/968)
+ * Change the known safe room version to version 4
+   [\#966](https://github.com/matrix-org/matrix-js-sdk/pull/966)
+ * Check for lazy-loading support in the spec versions instead
+   [\#965](https://github.com/matrix-org/matrix-js-sdk/pull/965)
+ * Use camelCase instead of underscore
+   [\#963](https://github.com/matrix-org/matrix-js-sdk/pull/963)
+ * Time out verification attempts after 10 minutes of inactivity
+   [\#961](https://github.com/matrix-org/matrix-js-sdk/pull/961)
+ * Don't handle key verification requests which are immediately cancelled
+   [\#962](https://github.com/matrix-org/matrix-js-sdk/pull/962)
+
+Changes in [2.0.1](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.0.1) (2019-06-19)
+================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.0.1-rc.2...v2.0.1)
+
+ No changes since rc.2
+
+Changes in [2.0.1-rc.2](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.0.1-rc.2) (2019-06-18)
+==========================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.0.1-rc.1...v2.0.1-rc.2)
+
+ * return 'sending' status for an event that is only locally redacted
+   [\#960](https://github.com/matrix-org/matrix-js-sdk/pull/960)
+ * Key verification request fixes
+   [\#954](https://github.com/matrix-org/matrix-js-sdk/pull/954)
+ * Add flag to force saving sync store
+   [\#956](https://github.com/matrix-org/matrix-js-sdk/pull/956)
+ * Expose the inhibit_login flag to register
+   [\#953](https://github.com/matrix-org/matrix-js-sdk/pull/953)
+ *  Support redactions and relations of/with unsent events.
+   [\#947](https://github.com/matrix-org/matrix-js-sdk/pull/947)
+
+Changes in [2.0.1-rc.1](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.0.1-rc.1) (2019-06-12)
+==========================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v2.0.0...v2.0.1-rc.1)
+
+ * Fix content uploads for modern browsers
+   [\#952](https://github.com/matrix-org/matrix-js-sdk/pull/952)
+ * Don't overlap auth submissions with polls
+   [\#951](https://github.com/matrix-org/matrix-js-sdk/pull/951)
+ * Add funding details for GitHub sponsor button
+   [\#945](https://github.com/matrix-org/matrix-js-sdk/pull/945)
+ * Fix backup sig validation with multiple sigs
+   [\#944](https://github.com/matrix-org/matrix-js-sdk/pull/944)
+ * Don't send another token request while one's in flight
+   [\#943](https://github.com/matrix-org/matrix-js-sdk/pull/943)
+ * Don't poll UI auth again until current poll finishes
+   [\#942](https://github.com/matrix-org/matrix-js-sdk/pull/942)
+ * Provide the discovered URLs when a liveliness error occurs
+   [\#938](https://github.com/matrix-org/matrix-js-sdk/pull/938)
+ * Encode event IDs when redacting events
+   [\#941](https://github.com/matrix-org/matrix-js-sdk/pull/941)
+ * add missing logger
+   [\#940](https://github.com/matrix-org/matrix-js-sdk/pull/940)
+ * verification: don't error if we don't know about some keys
+   [\#939](https://github.com/matrix-org/matrix-js-sdk/pull/939)
+ * Local echo for redactions
+   [\#937](https://github.com/matrix-org/matrix-js-sdk/pull/937)
+ * Refresh safe room versions when the server looks more modern than us
+   [\#934](https://github.com/matrix-org/matrix-js-sdk/pull/934)
+ * Add v4 as a safe room version
+   [\#935](https://github.com/matrix-org/matrix-js-sdk/pull/935)
+ * Disable guard-for-in rule
+   [\#933](https://github.com/matrix-org/matrix-js-sdk/pull/933)
+ * Extend loglevel logging for the whole project
+   [\#924](https://github.com/matrix-org/matrix-js-sdk/pull/924)
+ * fix(login): saves access_token and user_id after login for all login types
+   [\#930](https://github.com/matrix-org/matrix-js-sdk/pull/930)
+ * Do not try to request thumbnails with non-integer sizes
+   [\#929](https://github.com/matrix-org/matrix-js-sdk/pull/929)
+ * Revert "Add a bunch of debugging to .well-known IS validation"
+   [\#928](https://github.com/matrix-org/matrix-js-sdk/pull/928)
+ * Add a bunch of debugging to .well-known IS validation
+   [\#927](https://github.com/matrix-org/matrix-js-sdk/pull/927)
+
+Changes in [2.0.0](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v2.0.0) (2019-05-31)
+================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v1.2.0...v2.0.0)
+
+BREAKING CHANGES
+----------------
+
+ * This package now publishes in ES6 / ES2015 syntax to NPM
+ * Saves access_token and user_id after login for all login types
+   [\#932](https://github.com/matrix-org/matrix-js-sdk/pull/932)
+ * Fix recovery key encoding for base-x 3.0.5
+   [\#931](https://github.com/matrix-org/matrix-js-sdk/pull/931)
+
+Changes in [1.2.0](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v1.2.0) (2019-05-29)
+================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v1.2.0-rc.1...v1.2.0)
+
+
+Changes in [1.2.0-rc.1](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v1.2.0-rc.1) (2019-05-23)
+==========================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v1.1.0...v1.2.0-rc.1)
+
+ * interactive-auth now handles requesting email tokens
+   [\#926](https://github.com/matrix-org/matrix-js-sdk/pull/926)
+ * allow access to unreplaced message content
+   [\#923](https://github.com/matrix-org/matrix-js-sdk/pull/923)
+ * Add method to retrieve replacing event
+   [\#922](https://github.com/matrix-org/matrix-js-sdk/pull/922)
+ * More logging when signature verification fails
+   [\#921](https://github.com/matrix-org/matrix-js-sdk/pull/921)
+ * Local echo for m.replace relations
+   [\#920](https://github.com/matrix-org/matrix-js-sdk/pull/920)
+ * Track relations as pending and remove when cancelled
+   [\#919](https://github.com/matrix-org/matrix-js-sdk/pull/919)
+ * Add stringify helper to summarise events when debugging
+   [\#916](https://github.com/matrix-org/matrix-js-sdk/pull/916)
+ * Message editing: filter out replacements for senders that are not the
+   original sender
+   [\#918](https://github.com/matrix-org/matrix-js-sdk/pull/918)
+ * Wait until decrypt before aggregating
+   [\#917](https://github.com/matrix-org/matrix-js-sdk/pull/917)
+ * Message editing: mark original event as replaced instead of replacing the
+   event object
+   [\#914](https://github.com/matrix-org/matrix-js-sdk/pull/914)
+ * Support for replacing message through m.replace relationship.
+   [\#913](https://github.com/matrix-org/matrix-js-sdk/pull/913)
+ * Use a short timeout for .well-known requests
+   [\#912](https://github.com/matrix-org/matrix-js-sdk/pull/912)
+ * Redaction and change events for relations
+   [\#911](https://github.com/matrix-org/matrix-js-sdk/pull/911)
+ * Add basic read path for relations
+   [\#910](https://github.com/matrix-org/matrix-js-sdk/pull/910)
+ * Add a concept of default push rules, using it for tombstone notifications
+   [\#860](https://github.com/matrix-org/matrix-js-sdk/pull/860)
+ * yarn upgrade
+   [\#907](https://github.com/matrix-org/matrix-js-sdk/pull/907)
+
+Changes in [1.1.0](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v1.1.0) (2019-05-07)
+================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v1.1.0-rc.1...v1.1.0)
+
+ * No Changes since rc.1
+
+Changes in [1.1.0-rc.1](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v1.1.0-rc.1) (2019-04-30)
+==========================================================================================================
+[Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v1.0.4...v1.1.0-rc.1)
+
+ * use the release version of olm 3.1.0
+   [\#903](https://github.com/matrix-org/matrix-js-sdk/pull/903)
+ * Use new Olm repo link in README
+   [\#901](https://github.com/matrix-org/matrix-js-sdk/pull/901)
+ * Support being fed a .well-known config object for validation
+   [\#897](https://github.com/matrix-org/matrix-js-sdk/pull/897)
+ * emit self-membership event at end of handling sync update
+   [\#900](https://github.com/matrix-org/matrix-js-sdk/pull/900)
+ * Use packages.matrix.org for Olm
+   [\#898](https://github.com/matrix-org/matrix-js-sdk/pull/898)
+ * Fix tests on develop
+   [\#899](https://github.com/matrix-org/matrix-js-sdk/pull/899)
+ * Stop syncing when the token is invalid
+   [\#895](https://github.com/matrix-org/matrix-js-sdk/pull/895)
+ * change event redact,  POST request to PUT request
+   [\#887](https://github.com/matrix-org/matrix-js-sdk/pull/887)
+ * Expose better autodiscovery error messages
+   [\#894](https://github.com/matrix-org/matrix-js-sdk/pull/894)
+ * Explicitly guard store usage during sync startup
+   [\#892](https://github.com/matrix-org/matrix-js-sdk/pull/892)
+ * Flag v3 rooms as safe
+   [\#893](https://github.com/matrix-org/matrix-js-sdk/pull/893)
+ * Cache failed capabilities lookups for shorter amounts of time
+   [\#890](https://github.com/matrix-org/matrix-js-sdk/pull/890)
+ * Fix highlight notifications for unencrypted rooms
+   [\#891](https://github.com/matrix-org/matrix-js-sdk/pull/891)
+ * Document checking crypto state before using `hasUnverifiedDevices`
+   [\#889](https://github.com/matrix-org/matrix-js-sdk/pull/889)
+ * Add logging to sync startup path
+   [\#888](https://github.com/matrix-org/matrix-js-sdk/pull/888)
+ * Track e2e highlights better, particularly in 'Mentions Only' rooms
+   [\#886](https://github.com/matrix-org/matrix-js-sdk/pull/886)
+ * support both the incorrect and correct MAC methods
+   [\#882](https://github.com/matrix-org/matrix-js-sdk/pull/882)
+ * Refuse to set forwards pagination token on live timeline
+   [\#885](https://github.com/matrix-org/matrix-js-sdk/pull/885)
+ * Degrade `IndexedDBStore` back to memory only on failure
+   [\#884](https://github.com/matrix-org/matrix-js-sdk/pull/884)
+ * Refuse to link live timelines into the forwards/backwards position when
+   either is invalid
+   [\#877](https://github.com/matrix-org/matrix-js-sdk/pull/877)
+ * Key backup logging improvements
+   [\#883](https://github.com/matrix-org/matrix-js-sdk/pull/883)
+ * Don't assume aborts are always from txn.abort()
+   [\#880](https://github.com/matrix-org/matrix-js-sdk/pull/880)
+ * Add a bunch of logging
+   [\#878](https://github.com/matrix-org/matrix-js-sdk/pull/878)
+ * Refuse splicing the live timeline into a broken position
+   [\#873](https://github.com/matrix-org/matrix-js-sdk/pull/873)
+ * Add existence check to local storage based crypto store
+   [\#872](https://github.com/matrix-org/matrix-js-sdk/pull/872)
+
 Changes in [1.0.4](https://github.com/matrix-org/matrix-js-sdk/releases/tag/v1.0.4) (2019-04-08)
 ================================================================================================
 [Full Changelog](https://github.com/matrix-org/matrix-js-sdk/compare/v1.0.3...v1.0.4)
