@@ -4,7 +4,9 @@
     "bug_report_endpoint_url": "/bugreports/submit",
     "features": {
         "feature_groups": "labs",
-        "feature_pinning": "labs"
+        "feature_pinning": "labs",
+        "feature_reactions": "enable",
+        "feature_message_editing": "enable"
     },
     "default_theme": "tchap",
     "piwik": {
