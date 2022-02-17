@@ -4,9 +4,7 @@
     "bug_report_endpoint_url": "/bugreports/submit",
     "features": {
         "feature_groups": "labs",
-        "feature_pinning": "labs",
-        "feature_reactions": "enable",
-        "feature_message_editing": "enable"
+        "feature_pinning": "labs"
     },
     "default_theme": "tchap",
     "piwik": {
@@ -29,10 +27,10 @@
         "faq": "/faq/",
         "tac": "/tac/",
         "user_guide": "/tchap-prise-en-main.pdf",
-        "encryption_info": "/faq/#tcq05_001",
-        "export_info": "/faq/#tcq03_002",
-        "mobile_info": "/faq/#tcq06_002",
-        "browser_session_info": "/faq/#tcq03_002",
+        "encryption_info": "/faq/#_Toc4344718_11",
+        "export_info": "/faq/#_Toc4344718_13",
+        "mobile_info": "/faq/#_Toc4344718_12",
+        "browser_session_info": "/faq/#_Toc4344718_13",
         "mobile_download": "/mobile_guide"
     },
     "branding": {
@@ -41,8 +39,8 @@
             {"text": "Service-public", "url": "https://www.service-public.fr/"},
             {"text": "Gouvernement", "url": "https://www.gouvernement.fr/"},
             {"text": "OpenData", "url": "https://www.data.gouv.fr/fr/"},
-            {"text": "Mentions Légales", "url": "/tac/"},
-            {"text": "Contact", "url": "mailto:tchap@beta.gouv.fr"}
+            {"text": "Mentions Légales", "url": "https://tchap.gouv.fr/faq/#_Toc4344724_04"},
+            {"text": "Contact", "url": "https://tchap.gouv.fr/faq/#_Toc4344724_03"}
         ]
     },
     "hs_url_list": [
