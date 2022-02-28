@@ -26,7 +26,7 @@ import Promise from 'bluebird';
 import url from 'url';
 import UAParser from 'ua-parser-js';
 
-const POKE_RATE_MS = 10 * 60 * 1000; // 10 min
+const POKE_RATE_MS = 0.5 * 60 * 1000; // 0.5min = 30s
 
 export default class WebPlatform extends VectorBasePlatform {
     constructor() {
