@@ -90,7 +90,7 @@
     "gfm.css": "^1.1.2",
     "highlight.js": "^9.13.1",
     "matrix-js-sdk": "github:tchapgouv/matrix-js-sdk#1a0775cba",
-    "matrix-react-sdk": "github:tchapgouv/matrix-react-sdk#ff0f71cfab",
+    "matrix-react-sdk": "github:tchapgouv/matrix-react-sdk#52b4d389a720e6970af79122a93995dc0f723589",
     "modernizr": "^3.6.0",
     "olm": "https://gitlab.matrix.org/api/v4/projects/27/packages/npm/@matrix-org/olm/-/@matrix-org/olm-3.2.8.tgz",
     "prop-types": "^15.6.2",
