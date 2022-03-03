@@ -46,7 +46,20 @@
         ]
     },
     "hs_url_list": [
-        "i.tchap.gouv.fr",
-        "e.tchap.gouv.fr"
+        "agent.tchap.gouv.fr",
+        "agent.dev-durable.tchap.gouv.fr",
+        "agent.dinum.tchap.gouv.fr",
+        "agent.intradef.tchap.gouv.fr",
+        "agent.diplomatie.tchap.gouv.fr",
+        "agent.justice.tchap.gouv.fr",
+        "agent.agriculture.tchap.gouv.fr",
+        "agent.interieur.tchap.gouv.fr",
+        "agent.social.tchap.gouv.fr",
+        "agent.education.tchap.gouv.fr",
+        "agent.finances.tchap.gouv.fr",
+        "agent.ssi.tchap.gouv.fr",
+        "agent.pm.tchap.gouv.fr",
+        "agent.elysee.tchap.gouv.fr",
+        "agent.culture.tchap.gouv.fr"
     ]
 }
