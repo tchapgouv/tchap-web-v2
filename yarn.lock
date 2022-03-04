@@ -4648,10 +4648,10 @@ he@1.2.x:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
-highlight.js@9.14.2:
-  version "9.14.2"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.14.2.tgz#efbfb22dc701406e4da406056ef8c2b70ebe5b26"
-  integrity sha512-Nc6YNECYpxyJABGYJAyw7dBAYbXEuIzwzkqoJnwbc1nIpCiN+3ioYf0XrBnLiyyG0JLuJhpPtt2iTSbXiKLoyA==
+highlight.js@10.4.1:
+  version "10.4.1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.4.1.tgz#d48fbcf4a9971c4361b3f95f302747afe19dbad0"
+  integrity sha512-yR5lWvNz7c85OhVAEAeFhVCc/GV4C30Fjzc/rCP0aCWzc1UUOPUk55dK/qdwTZHBvMZo+eZ2jpk62ndX/xMFlg==
 
 highlight.js@^9.13.1:
   version "9.18.5"
@@ -6125,9 +6125,9 @@ matrix-mock-request@^1.2.3:
     bluebird "^3.5.0"
     expect "^1.20.2"
 
-"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#466d34d41cd185c05bdc19a6ee7cbb1545c8765a":
+"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#6bcb65a0a7":
   version "2.4.0-tchap-rc.2"
-  resolved "https://codeload.github.com/tchapgouv/matrix-react-sdk/tar.gz/466d34d41cd185c05bdc19a6ee7cbb1545c8765a"
+  resolved "https://codeload.github.com/tchapgouv/matrix-react-sdk/tar.gz/6bcb65a0a7df2288408d9840ca10dc695ed8d56e"
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
     babel-runtime "^6.26.0"
@@ -6148,7 +6148,7 @@ matrix-mock-request@^1.2.3:
     gemini-scrollbar "github:matrix-org/gemini-scrollbar#b302279"
     gfm.css "^1.1.1"
     glob "^5.0.14"
-    highlight.js "9.14.2"
+    highlight.js "10.4.1"
     is-ip "^2.0.0"
     isomorphic-fetch "^2.2.1"
     linkifyjs "^2.1.6"
