@@ -5,14 +5,18 @@
 set -e
 
 version=`node -e 'console.log(require("./package.json").version)'`
-now=$(date +%Y%m%d)
+today=$(date +%Y%m%d)
+
+if [[ -n "$CONFIG" ]]; then
+  echo "CONFIG=$CONFIG"
+  cp "config.$CONFIG.json" config.json
+  echo "Using config.$CONFIG.json"
+else
+  echo "No config specified, using config.json."
+fi
 
 yarn clean
 yarn build:scalingo
-
-# include the sample config in the tarball. Arguably this should be done by
-# `yarn build`, but it's just too painful.
-cp config.sample.json webapp/
 
 mkdir -p dist
 cp -r webapp tchap-$version
@@ -24,9 +28,11 @@ else
     echo ${version} > tchap-$version/version
 fi
 
-# Do not make a tar file. Just copy the files in /dist, ready to be served.
+# Copy the files in /dist, ready to be served.
 cp -r tchap-$version/* dist/
+# Also make a tar file. Useful for releases.
+tar chvzf tchap-$version-$today.tar.gz dist
 rm -r tchap-$version
 
 echo
-echo "Package dist/tchap-$version"
+echo "Packaged tchap-$version"
