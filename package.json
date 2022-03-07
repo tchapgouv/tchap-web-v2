@@ -36,7 +36,8 @@
     "build:react-sdk": "uses the yarn-sub script, which creates a subprocess, to run yarn build inside node_modules/matrix-react-sdk.",
     "build:js-sdk": "uses the yarn-sub script, which creates a subprocess, to run yarn build inside node_modules/matrix-js-sdk.",
     "build:bundle": "Uses webpack to build the /webapp folder where files are ready to be served by a file server (e.g. nginx).",
-    "dist": "Build and make a tar file with the output, in the /dist folder. It is the /webapp dir (see build:bundle), compressed."
+    "dist": "Build and make a tar file with the output, in the /dist folder. It is the /webapp dir (see build:bundle), compressed.",
+    "force-version-react-sdk": "Due to yarn cache bug, we can get the wrong version of react-sdk, so force-install the right version."
   },
   "scripts": {
     "reskindex": "reskindex -h src/header",
@@ -56,7 +57,8 @@
     "build:js-sdk": "node scripts/yarn-sub.js matrix-js-sdk start:init",
     "build": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "build:dev": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle:dev",
-    "build:scalingo": "yarn build:js-sdk && yarn install:react-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
+    "build:scalingo": "yarn build:js-sdk && yarn force-version-react-sdk && yarn install:react-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
+    "force-version-react-sdk": "rm -rf node_modules/matrix-react-sdk; yarn install --check-files",
     "dist": "scripts/package.sh",
     "scalingo-postbuild": "scripts/package-scalingo.sh",
     "install:electron": "install-app-deps",
