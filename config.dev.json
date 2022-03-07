@@ -20,11 +20,11 @@
     },
     "terms_and_conditions_links": [
         {
-            "url": "https://tchap.gouv.fr/tac/",
+            "url": "https://app.dev.tchap.incubateur.net/tac/",
             "text": "Conditions générales d'utilisation"
         }
     ],
-    "base_host_url": "https://tchap.gouv.fr",
+    "base_host_url": "https://app.dev.tchap.incubateur.net",
     "generic_endpoints": {
         "faq": "/faq/",
         "tac": "/tac/",
