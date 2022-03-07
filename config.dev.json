@@ -46,8 +46,8 @@
         ]
     },
     "hs_url_list": [
-        "matrix.agent1.tchap.incubateur.net",
-        "matrix.agent2.tchap.incubateur.net",
-        "matrix.externe.tchap.incubateur.net"
+        "agent1.tchap.incubateur.net",
+        "agent2.tchap.incubateur.net",
+        "externe.tchap.incubateur.net"
     ]
 }
