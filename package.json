@@ -58,7 +58,7 @@
     "build": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
     "build:dev": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle:dev",
     "build:scalingo": "yarn build:js-sdk && yarn force-version-react-sdk && yarn install:react-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
-    "force-version-react-sdk": "rm -rf node_modules/matrix-react-sdk; yarn install --check-files",
+    "force-version-react-sdk": "rm -rf node_modules/matrix-react-sdk; yarn install --production=false --check-files",
     "dist": "scripts/package.sh",
     "scalingo-postbuild": "scripts/package-scalingo.sh",
     "install:electron": "install-app-deps",
