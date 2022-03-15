@@ -31,8 +31,8 @@ fi
 # Copy the files in /dist, ready to be served.
 cp -r tchap-$version/* dist/
 # Also make a tar file. Useful for releases.
-tar chvzf tchap-$version-$today.tar.gz dist
+tar chvzf tchap-$version-$CONFIG-$today.tar.gz dist
 rm -r tchap-$version
 
 echo
-echo "Packaged tchap-$version"
+echo "Packaged tchap-$version-$CONFIG"
