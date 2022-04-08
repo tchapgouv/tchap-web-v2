@@ -6125,9 +6125,9 @@ matrix-mock-request@^1.2.3:
     bluebird "^3.5.0"
     expect "^1.20.2"
 
-"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#8410f90":
+"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#6e3138d":
   version "2.4.0-tchap"
-  resolved "https://codeload.github.com/tchapgouv/matrix-react-sdk/tar.gz/8410f90cab5e4d98261be925d36988ada1181500"
+  resolved "https://codeload.github.com/tchapgouv/matrix-react-sdk/tar.gz/6e3138d8e9f286c730f4d9a46737cfbc32ed8784"
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
     babel-runtime "^6.26.0"
