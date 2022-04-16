@@ -33,7 +33,7 @@
         "export_info": "/faq/#tcq03_002",
         "mobile_info": "/faq/#tcq06_002",
         "browser_session_info": "/faq/#tcq03_002",
-        "mobile_download": "https://tchap.beta.gouv.fr"
+        "mobile_download": "/landing"
     },
     "branding": {
         "authFooterLinks": [
