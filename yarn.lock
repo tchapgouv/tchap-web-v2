@@ -6125,9 +6125,9 @@ matrix-mock-request@^1.2.3:
     bluebird "^3.5.0"
     expect "^1.20.2"
 
-"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#remove-hexagon":
+"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#57f2266da1c9383f99f91a508b2ad1405abf1ed2":
   version "2.4.0-tchap"
-  resolved "https://codeload.github.com/tchapgouv/matrix-react-sdk/tar.gz/b1f8d2026fa5277aee41119695b6e17c0f73a9e3"
+  resolved "https://codeload.github.com/tchapgouv/matrix-react-sdk/tar.gz/57f2266da1c9383f99f91a508b2ad1405abf1ed2"
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
     babel-runtime "^6.26.0"
