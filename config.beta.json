@@ -42,7 +42,7 @@
             {"text": "Gouvernement", "url": "https://www.gouvernement.fr/"},
             {"text": "OpenData", "url": "https://www.data.gouv.fr/fr/"},
             {"text": "Mentions Légales", "url": "/tac/"},
-            {"text": "Contact", "url": "mailto:tchap@beta.gouv.fr"}
+            {"text": "Contact", "url": "https://tchap.beta.gouv.fr/#contact"}
         ]
     },
     "hs_url_list": [
