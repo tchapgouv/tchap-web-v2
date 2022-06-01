@@ -10,7 +10,7 @@
     "electron-devtools-installer": "^2.2.4",
     "electron-store": "^2.0.0",
     "electron-window-state": "^4.1.0",
-    "minimist": "^1.2.3",
+    "minimist": "^1.2.6",
     "png-to-ico": "^1.0.2"
   }
 }
