@@ -1,4 +1,4 @@
-name: "test-tauri-on-pr"
+name: "test-tauri-on-pr"distPath
 on: [pull_request]
 
 jobs:
@@ -28,6 +28,7 @@ jobs:
       run: yarn install && yarn build:scalingo
     - uses: tauri-apps/tauri-action@v0
       with:
-        bundleIdentifier: fr.gouv.tchap.dev
+        bundleIdentifier: fr.gouv.tchap.ci
+        distPath: dist
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
