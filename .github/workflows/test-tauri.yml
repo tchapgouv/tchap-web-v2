@@ -27,5 +27,7 @@ jobs:
     - name: install app dependencies and build it
       run: yarn install && yarn build:scalingo
     - uses: tauri-apps/tauri-action@v0
+      with:
+        bundleIdentifier: fr.gouv.tchap.dev
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
