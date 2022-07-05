@@ -91,7 +91,8 @@
         "highlight.js": "^9.13.1",
         "matrix-js-sdk": "github:tchapgouv/matrix-js-sdk#1a0775cba",
         "matrix-react-sdk": "github:tchapgouv/matrix-react-sdk#f13de204f5",
-        "modernizr": "^3.6.0",
+
+"modernizr": "^3.6.0",
         "olm": "https://gitlab.matrix.org/api/v4/projects/27/packages/npm/@matrix-org/olm/-/@matrix-org/olm-3.2.8.tgz",
         "prop-types": "^15.6.2",
         "react": "^15.6.0",
