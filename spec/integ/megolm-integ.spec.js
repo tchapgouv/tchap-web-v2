@@ -500,7 +500,7 @@ describe("megolm", function() {
     it('Alice sends a megolm message', function() {
         let p2pSession;
 
-        aliceTestClient.expectKeyQuery({device_keys: {'@alice:localhost': {}}});
+        aliceTestClient.expectKeyQuery({device_keys: {'@alice:localhost': []}});
         return aliceTestClient.start().then(() => {
             // establish an olm session with alice
             return createOlmSession(testOlmAccount, aliceTestClient);

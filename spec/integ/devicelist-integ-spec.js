@@ -113,7 +113,7 @@ describe("DeviceList management:", function() {
 
             aliceTestClient.httpBackend.when('POST', '/keys/query').respond(200, {
                 device_keys: {
-                    '@bob:xyz': {},
+                    '@bob:xyz': [],
                 },
             });
 
@@ -145,7 +145,7 @@ describe("DeviceList management:", function() {
     it("We should not get confused by out-of-order device query responses",
        () => {
            // https://github.com/vector-im/riot-web/issues/3126
-           aliceTestClient.expectKeyQuery({device_keys: {'@alice:localhost': {}}});
+           aliceTestClient.expectKeyQuery({device_keys: {'@alice:localhost': []}});
            return aliceTestClient.start().then(() => {
                aliceTestClient.httpBackend.when('GET', '/sync').respond(
                    200, getSyncResponse(['@bob:xyz', '@chris:abc']));
@@ -157,8 +157,8 @@ describe("DeviceList management:", function() {
                aliceTestClient.httpBackend.when('POST', '/keys/query').respond(
                    200, {
                        device_keys: {
-                           '@bob:xyz': {},
-                           '@chris:abc': {},
+                           '@bob:xyz': [],
+                           '@chris:abc': [],
                        },
                    },
                );
@@ -199,11 +199,11 @@ describe("DeviceList management:", function() {
                // check that we don't yet have a request for chris's devices.
                aliceTestClient.httpBackend.when('POST', '/keys/query', {
                    device_keys: {
-                       '@chris:abc': {},
+                       '@chris:abc': [],
                    },
                    token: '3',
                }).respond(200, {
-                   device_keys: {'@chris:abc': {}},
+                   device_keys: {'@chris:abc': []},
                });
                return aliceTestClient.httpBackend.flush('/keys/query', 1);
            }).then((flushed) => {
@@ -228,11 +228,11 @@ describe("DeviceList management:", function() {
                // it complete.
                aliceTestClient.httpBackend.when('POST', '/keys/query', {
                    device_keys: {
-                       '@bob:xyz': {},
+                       '@bob:xyz': [],
                    },
                    token: '2',
                }).respond(200, {
-                   device_keys: {'@bob:xyz': {}},
+                   device_keys: {'@bob:xyz': []},
                });
                return aliceTestClient.httpBackend.flush('/keys/query', 1);
            }).then((flushed) => {
@@ -287,7 +287,7 @@ describe("DeviceList management:", function() {
             aliceTestClient.httpBackend.when('POST', '/keys/query').respond(
                 200, {
                     device_keys: {
-                        '@bob:xyz': {},
+                        '@bob:xyz': [],
                     },
                 },
             );
