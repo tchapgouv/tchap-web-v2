@@ -852,10 +852,12 @@ MatrixBaseApis.prototype.createGroup = function(content) {
  * @return {module:http-api.MatrixError} Rejects: with an error response.
  */
 MatrixBaseApis.prototype.getPublicisedGroups = function(userIds) {
-    const path = utils.encodeUri("/publicised_groups");
-    return this._http.authedRequest(
-        undefined, "POST", path, undefined, { user_ids: userIds },
-    );
+    // :TCHAP remove obsolete feature
+    // const path = utils.encodeUri("/publicised_groups");
+    // return this._http.authedRequest(
+    //     undefined, "POST", path, undefined, { user_ids: userIds },
+    // );
+    return Promise.resolve({"users": {}});
 };
 
 /**
