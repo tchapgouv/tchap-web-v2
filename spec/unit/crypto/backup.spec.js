@@ -34,7 +34,7 @@ const Olm = global.Olm;
 
 const MatrixClient = sdk.MatrixClient;
 const MatrixEvent = sdk.MatrixEvent;
-const MegolmDecryption = algorithms.DECRYPTION_CLASSES['m.megolm.v1.aes-sha2'];
+const MegolmDecryption = algorithms.DECRYPTION_CLASSES.get('m.megolm.v1.aes-sha2');
 
 const ROOM_ID = '!ROOM:ID';
 

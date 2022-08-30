@@ -80,14 +80,14 @@ function EventTimelineSet(room, opts) {
 
     // just a list - *not* ordered.
     this._timelines = [this._liveTimeline];
-    this._eventIdToTimeline = {};
+    this._eventIdToTimeline = new Map();
 
     this._filter = opts.filter || null;
 
     if (this._unstableClientRelationAggregation) {
         // A tree of objects to access a set of relations for an event, as in:
         // this._relations[relatesToEventId][relationType][relationEventType]
-        this._relations = {};
+        this._relations = new Map();
     }
 }
 utils.inherits(EventTimelineSet, EventEmitter);
@@ -145,7 +145,7 @@ EventTimelineSet.prototype.getLiveTimeline = function() {
  * @return {module:models/event-timeline~EventTimeline} timeline
  */
 EventTimelineSet.prototype.eventIdToTimeline = function(eventId) {
-    return this._eventIdToTimeline[eventId];
+    return this._eventIdToTimeline.get(eventId);
 };
 
 /**
@@ -155,10 +155,10 @@ EventTimelineSet.prototype.eventIdToTimeline = function(eventId) {
  * @param {String} newEventId  event ID of the replacement event
  */
 EventTimelineSet.prototype.replaceEventId = function(oldEventId, newEventId) {
-    const existingTimeline = this._eventIdToTimeline[oldEventId];
+    const existingTimeline = this._eventIdToTimeline.get(oldEventId);
     if (existingTimeline) {
-        delete this._eventIdToTimeline[oldEventId];
-        this._eventIdToTimeline[newEventId] = existingTimeline;
+        this._eventIdToTimeline.delete(oldEventId);
+        this._eventIdToTimeline.set(newEventId, existingTimeline);
     }
 };
 
@@ -194,7 +194,7 @@ EventTimelineSet.prototype.resetLiveTimeline = function(
 
     if (resetAllTimelines) {
         this._timelines = [newTimeline];
-        this._eventIdToTimeline = {};
+        this._eventIdToTimeline = new Map();
     } else {
         this._timelines.push(newTimeline);
     }
@@ -225,7 +225,7 @@ EventTimelineSet.prototype.resetLiveTimeline = function(
  * the given event, or null if unknown
  */
 EventTimelineSet.prototype.getTimelineForEvent = function(eventId) {
-    const res = this._eventIdToTimeline[eventId];
+    const res = this._eventIdToTimeline.get(eventId);
     return (res === undefined) ? null : res;
 };
 
@@ -384,7 +384,7 @@ EventTimelineSet.prototype.addEventsToTimeline = function(events, toStartOfTimel
         const event = events[i];
         const eventId = event.getId();
 
-        const existingTimeline = this._eventIdToTimeline[eventId];
+        const existingTimeline = this._eventIdToTimeline.get(eventId);
 
         if (!existingTimeline) {
             // we don't know about this event yet. Just add it to the timeline.
@@ -490,7 +490,7 @@ EventTimelineSet.prototype.addLiveEvent = function(event, duplicateStrategy) {
         }
     }
 
-    const timeline = this._eventIdToTimeline[event.getId()];
+    const timeline = this._eventIdToTimeline.get(event.getId());
     if (timeline) {
         if (duplicateStrategy === "replace") {
             debuglog("EventTimelineSet.addLiveEvent: replacing duplicate event " +
@@ -539,7 +539,7 @@ EventTimelineSet.prototype.addEventToTimeline = function(event, timeline,
                                                          toStartOfTimeline) {
     const eventId = event.getId();
     timeline.addEvent(event, toStartOfTimeline);
-    this._eventIdToTimeline[eventId] = timeline;
+    this._eventIdToTimeline.set(eventId, timeline);
 
     this.setRelationsTarget(event);
     this.aggregateRelations(event);
@@ -565,10 +565,10 @@ EventTimelineSet.prototype.addEventToTimeline = function(event, timeline,
 EventTimelineSet.prototype.handleRemoteEcho = function(localEvent, oldEventId,
                                                         newEventId) {
     // XXX: why don't we infer newEventId from localEvent?
-    const existingTimeline = this._eventIdToTimeline[oldEventId];
+    const existingTimeline = this._eventIdToTimeline.get(oldEventId);
     if (existingTimeline) {
-        delete this._eventIdToTimeline[oldEventId];
-        this._eventIdToTimeline[newEventId] = existingTimeline;
+        this._eventIdToTimeline.delete(oldEventId);
+        this._eventIdToTimeline.set(newEventId, existingTimeline);
     } else {
         if (this._filter) {
             if (this._filter.filterRoomTimeline([localEvent]).length) {
@@ -589,14 +589,14 @@ EventTimelineSet.prototype.handleRemoteEcho = function(localEvent, oldEventId,
  * in this room.
  */
 EventTimelineSet.prototype.removeEvent = function(eventId) {
-    const timeline = this._eventIdToTimeline[eventId];
+    const timeline = this._eventIdToTimeline.get(eventId);
     if (!timeline) {
         return null;
     }
 
     const removed = timeline.removeEvent(eventId);
     if (removed) {
-        delete this._eventIdToTimeline[eventId];
+        this._eventIdToTimeline.delete(eventId);
         const data = {
             timeline: timeline,
         };
@@ -623,8 +623,8 @@ EventTimelineSet.prototype.compareEventOrdering = function(eventId1, eventId2) {
         return 0;
     }
 
-    const timeline1 = this._eventIdToTimeline[eventId1];
-    const timeline2 = this._eventIdToTimeline[eventId2];
+    const timeline1 = this._eventIdToTimeline.get(eventId1);
+    const timeline2 = this._eventIdToTimeline.get(eventId2);
 
     if (timeline1 === undefined) {
         return null;
@@ -705,9 +705,9 @@ EventTimelineSet.prototype.getRelationsForEvent = function(
 
     // debuglog("Getting relations for: ", eventId, relationType, eventType);
 
-    const relationsForEvent = this._relations[eventId] || {};
-    const relationsWithRelType = relationsForEvent[relationType] || {};
-    return relationsWithRelType[eventType];
+    const relationsForEvent = this._relations.get(eventId) || new Map();
+    const relationsWithRelType = relationsForEvent.get(relationType) || new Map();
+    return relationsWithRelType.get(eventType);
 };
 
 /**
@@ -721,7 +721,7 @@ EventTimelineSet.prototype.setRelationsTarget = function(event) {
         return;
     }
 
-    const relationsForEvent = this._relations[event.getId()];
+    const relationsForEvent = this._relations.get(event.getId());
     if (!relationsForEvent) {
         return;
     }
@@ -772,22 +772,25 @@ EventTimelineSet.prototype.aggregateRelations = function(event) {
 
     // debuglog("Aggregating relation: ", event.getId(), eventType, relation);
 
-    let relationsForEvent = this._relations[relatesToEventId];
+    let relationsForEvent = this._relations.get(relatesToEventId);
     if (!relationsForEvent) {
-        relationsForEvent = this._relations[relatesToEventId] = {};
+        relationsForEvent = new Map();
+        this._relations.set(relatesToEventId, relationsForEvent);
     }
-    let relationsWithRelType = relationsForEvent[relationType];
+    let relationsWithRelType = relationsForEvent.get(relationType);
     if (!relationsWithRelType) {
-        relationsWithRelType = relationsForEvent[relationType] = {};
+        relationsWithRelType = new Map();
+        relationsForEvent.set(relationType, relationsWithRelType);
     }
-    let relationsWithEventType = relationsWithRelType[eventType];
+    let relationsWithEventType = relationsWithRelType.get(eventType);
 
     if (!relationsWithEventType) {
-        relationsWithEventType = relationsWithRelType[eventType] = new Relations(
+        relationsWithEventType = new Relations(
             relationType,
             eventType,
             this.room,
         );
+        relationsWithRelType.set(eventType, relationsWithEventType);
         const relatesToEvent = this.findEventById(relatesToEventId);
         if (relatesToEvent) {
             relationsWithEventType.setTargetEvent(relatesToEvent);

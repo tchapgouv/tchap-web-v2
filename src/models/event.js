@@ -51,12 +51,15 @@ const EventStatus = {
 };
 module.exports.EventStatus = EventStatus;
 
-const interns = {};
+const interns = new Map();
 function intern(str) {
-    if (!interns[str]) {
-        interns[str] = str;
+    if (str instanceof String) {
+        str = str.toString();
     }
-    return interns[str];
+    if (!interns.has(str)) {
+        interns.set(str, str);
+    }
+    return interns.get(str);
 }
 
 /**
