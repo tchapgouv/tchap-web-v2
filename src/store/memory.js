@@ -48,9 +48,11 @@ module.exports.MemoryStore = function MemoryStore(opts) {
         //    filterId: Filter
         // }
     };
-    this.accountData = {
-        // type : content
-    };
+    /**
+     * Map event type → content
+     * @type Map<string, MatrixEvent>
+     */
+    this.accountData = new Map();
     this.localStorage = opts.localStorage;
     this._oobMembers = {
         // roomId: [member events]
@@ -301,7 +303,7 @@ module.exports.MemoryStore.prototype = {
     storeAccountDataEvents: function(events) {
         const self = this;
         events.forEach(function(event) {
-            self.accountData[event.getType()] = event;
+            self.accountData.set(event.getType(), event);
         });
     },
 
@@ -311,7 +313,7 @@ module.exports.MemoryStore.prototype = {
      * @return {?MatrixEvent} the user account_data event of given type, if any
      */
     getAccountData: function(eventType) {
-        return this.accountData[eventType];
+        return this.accountData.get(eventType);
     },
 
     /**
@@ -382,9 +384,7 @@ module.exports.MemoryStore.prototype = {
             //    filterId: Filter
             // }
         };
-        this.accountData = {
-            // type : content
-        };
+        this.accountData = new Map();// type : content
         return Promise.resolve();
     },
 
