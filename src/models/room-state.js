@@ -67,9 +67,13 @@ function RoomState(roomId, oobMemberFlags = undefined) {
     this.members = {
         // userId: RoomMember
     };
-    this.events = {
-        // eventType: { stateKey: MatrixEvent }
-    };
+
+    /**
+     * Map event type → Map state key → MatrixEvent
+     * @type Map<string, Map<string, MatrixEvent>>
+     */
+    this.events = new Map();
+
     this.paginationToken = null;
 
     this._sentinels = {
@@ -210,14 +214,14 @@ RoomState.prototype.getSentinelMember = function(userId) {
  * <code>undefined</code>, else a single event (or null if no match found).
  */
 RoomState.prototype.getStateEvents = function(eventType, stateKey) {
-    if (!this.events[eventType]) {
+    if (!this.events.has(eventType)) {
         // no match
         return stateKey === undefined ? [] : null;
     }
     if (stateKey === undefined) { // return all values
-        return utils.values(this.events[eventType]);
+        return utils.values(this.events.get(eventType));
     }
-    const event = this.events[eventType][stateKey];
+    const event = this.events.get(eventType).get(stateKey);
     return event ? event : null;
 };
 
@@ -237,8 +241,8 @@ RoomState.prototype.clone = function() {
     const status = this._oobMemberFlags.status;
     this._oobMemberFlags.status = OOB_STATUS_NOTSTARTED;
 
-    Object.values(this.events).forEach((eventsByStateKey) => {
-        const eventsForType = Object.values(eventsByStateKey);
+    this.events.forEach((eventsByStateKey) => {
+        const eventsForType = eventsByStateKey.values();
         copy.setStateEvents(eventsForType);
     });
 
@@ -275,8 +279,8 @@ RoomState.prototype.clone = function() {
  */
 RoomState.prototype.setUnknownStateEvents = function(events) {
     const unknownStateEvents = events.filter((event) => {
-        return this.events[event.getType()] === undefined ||
-            this.events[event.getType()][event.getStateKey()] === undefined;
+        return this.events.get(event.getType()) === undefined ||
+            this.events.get(event.getType()).get(event.getStateKey()) === undefined;
     });
 
     this.setStateEvents(unknownStateEvents);
@@ -384,10 +388,11 @@ RoomState.prototype._getOrCreateMember = function(userId, event) {
 };
 
 RoomState.prototype._setStateEvent = function(event) {
-    if (this.events[event.getType()] === undefined) {
-        this.events[event.getType()] = {};
+    if (this.events.get(event.getType()) === undefined) {
+        this.events.set(event.getType(), new Map());
     }
-    this.events[event.getType()][event.getStateKey()] = event;
+    this.events.get(event.getType())
+        .set(event.getStateKey(), event);
 };
 
 RoomState.prototype._updateMember = function(member) {
