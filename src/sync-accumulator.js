@@ -48,9 +48,11 @@ class SyncAccumulator {
         opts = opts || {};
         opts.maxTimelineEntries = opts.maxTimelineEntries || 50;
         this.opts = opts;
-        this.accountData = {
-            //$event_type: Object
-        };
+        /**
+         * Map event type → event
+         * @type Map<string, Object>
+         */
+        this.accountData = new Map();
         this.inviteRooms = {
             //$roomId: { ... sync 'invite' json data ... }
         };
@@ -100,7 +102,7 @@ class SyncAccumulator {
         }
         // Clobbers based on event type.
         syncResponse.account_data.events.forEach((e) => {
-            this.accountData[e.type] = e;
+            this.accountData.set(e.type, e);
         });
     }
 
@@ -528,8 +530,8 @@ class SyncAccumulator {
 
         // Add account data
         const accData = [];
-        Object.keys(this.accountData).forEach((evType) => {
-            accData.push(this.accountData[evType]);
+        Array.from(this.accountData.keys()).forEach((evType) => {
+            accData.push(this.accountData.get(evType));
         });
 
         return {
