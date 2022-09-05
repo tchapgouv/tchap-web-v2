@@ -5310,9 +5310,8 @@ mathml-tag-names@^2.0.1:
   resolved "https://registry.yarnpkg.com/mathml-tag-names/-/mathml-tag-names-2.1.3.tgz#4ddadd67308e780cf16a47685878ee27b736a0a3"
   integrity sha512-APMBEanjybaPzUrfqU0IMU5I0AswKMH7k8OTLs0vvV4KZpExkTkY87nR/zpbuTPj+gARop7aGUbl11pnDfW6xg==
 
-"matrix-js-sdk@github:tchapgouv/matrix-js-sdk#v2.5.6-tchap-rc.1":
-  version "2.2.0"
-  resolved "git+ssh://git@github.com/tchapgouv/matrix-js-sdk.git#04071e588e2af290a3e1f724ccf6167d991015d3"
+"matrix-js-sdk@file:../matrix-js-sdk":
+  version "2.2.0-tchap-2.5.6"
   dependencies:
     another-json "^0.2.0"
     babel-runtime "^6.26.0"
