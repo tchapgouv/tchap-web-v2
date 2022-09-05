@@ -140,9 +140,11 @@ function Room(roomId, client, myUserId, opts) {
         // $tagName: { $metadata: $value },
         // $tagName: { $metadata: $value },
     };
-    this.accountData = {
-        // $eventType: $event
-    };
+    /**
+     * Map event type → event
+     * @type Map<string, MatrixEvent>
+     */
+    this.accountData = new Map();
     this.summary = null;
     this.storageToken = opts.storageToken;
     this._opts = opts;
@@ -1738,7 +1740,7 @@ Room.prototype.addAccountData = function(events) {
         if (event.getType() === "m.tag") {
             this.addTags(event);
         }
-        this.accountData[event.getType()] = event;
+        this.accountData.set(event.getType(), event);
         this.emit("Room.accountData", event, this);
     }
 };
@@ -1749,7 +1751,7 @@ Room.prototype.addAccountData = function(events) {
  * @return {?MatrixEvent} the account_data event in question
  */
 Room.prototype.getAccountData = function(type) {
-    return this.accountData[type];
+    return this.accountData.get(type);
 };
 
 

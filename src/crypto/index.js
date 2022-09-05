@@ -145,14 +145,12 @@ export default function Crypto(baseApis, sessionStore, userId, deviceId,
     this._oneTimeKeyCheckInProgress = false;
 
     // EncryptionAlgorithm instance for each room
-    this._roomEncryptors = {};
+    this._roomEncryptors = new Map();
 
     // map from algorithm to DecryptionAlgorithm instance, for each room
-    this._roomDecryptors = {};
+    this._roomDecryptors = new Map();
 
-    this._supportedAlgorithms = utils.keys(
-        algorithms.DECRYPTION_CLASSES,
-    );
+    this._supportedAlgorithms = Array.from(algorithms.DECRYPTION_CLASSES.keys());
 
     this._deviceKeys = {};
 
@@ -931,7 +929,7 @@ Crypto.prototype.getEventSenderDeviceInfo = function(event) {
  * This should not normally be necessary.
  */
 Crypto.prototype.forceDiscardSession = function(roomId) {
-    const alg = this._roomEncryptors[roomId];
+    const alg = this._roomEncryptors.get(roomId);
     if (alg === undefined) throw new Error("Room not encrypted");
     if (alg.forceDiscardSession === undefined) {
         throw new Error("Room encryption algorithm doesn't support session discarding");
@@ -971,7 +969,7 @@ Crypto.prototype.setRoomEncryption = async function(roomId, config, inhibitDevic
     // the encryption event would appear in both.
     // If it's called more than twice though,
     // it signals a bug on client or server.
-    const existingAlg = this._roomEncryptors[roomId];
+    const existingAlg = this._roomEncryptors.get(roomId);
     if (existingAlg) {
         return;
     }
@@ -985,7 +983,7 @@ Crypto.prototype.setRoomEncryption = async function(roomId, config, inhibitDevic
         storeConfigPromise = this._roomList.setRoomEncryption(roomId, config);
     }
 
-    const AlgClass = algorithms.ENCRYPTION_CLASSES[config.algorithm];
+    const AlgClass = algorithms.ENCRYPTION_CLASSES.get(config.algorithm);
     if (!AlgClass) {
         throw new Error("Unable to encrypt with " + config.algorithm);
     }
@@ -999,7 +997,7 @@ Crypto.prototype.setRoomEncryption = async function(roomId, config, inhibitDevic
         roomId: roomId,
         config: config,
     });
-    this._roomEncryptors[roomId] = alg;
+    this._roomEncryptors.set(roomId, alg);
 
     if (storeConfigPromise) {
         await storeConfigPromise;
@@ -1032,7 +1030,7 @@ Crypto.prototype.setRoomEncryption = async function(roomId, config, inhibitDevic
 Crypto.prototype.trackRoomDevices = function(roomId) {
     const trackMembers = async () => {
         // not an encrypted room
-        if (!this._roomEncryptors[roomId]) {
+        if (!this._roomEncryptors.has(roomId)) {
             return;
         }
         const room = this._clientStore.getRoom(roomId);
@@ -1339,7 +1337,7 @@ Crypto.prototype.encryptEvent = async function(event, room) {
 
     const roomId = event.getRoomId();
 
-    const alg = this._roomEncryptors[roomId];
+    const alg = this._roomEncryptors.get(roomId);
     if (!alg) {
         // MatrixClient has already checked that this room should be encrypted,
         // so this is an unexpected situation.
@@ -1586,7 +1584,7 @@ Crypto.prototype._getTrackedE2eUsers = async function() {
 Crypto.prototype._getTrackedE2eRooms = function() {
     return this._clientStore.getRooms().filter((room) => {
         // check for rooms with encryption enabled
-        const alg = this._roomEncryptors[room.roomId];
+        const alg = this._roomEncryptors.get(room.roomId);
         if (!alg) {
             return false;
         }
@@ -2032,7 +2030,7 @@ Crypto.prototype._onRoomMembership = function(event, member, oldMembership) {
 
     const roomId = member.roomId;
 
-    const alg = this._roomEncryptors[roomId];
+    const alg = this._roomEncryptors.get(roomId);
     if (!alg) {
         // not encrypting in this room
         return;
@@ -2138,11 +2136,11 @@ Crypto.prototype._processReceivedRoomKeyRequest = async function(req) {
                 ` for ${roomId} / ${body.session_id} (id ${req.requestId})`);
 
     if (userId !== this._userId) {
-        if (!this._roomEncryptors[roomId]) {
+        if (!this._roomEncryptors.has(roomId)) {
             logger.debug(`room key request for unencrypted room ${roomId}`);
             return;
         }
-        const encryptor = this._roomEncryptors[roomId];
+        const encryptor = this._roomEncryptors.get(roomId);
         const device = this._deviceList.getStoredDevice(userId, deviceId);
         if (!device) {
             logger.debug(`Ignoring keyshare for unknown device ${userId}:${deviceId}`);
@@ -2167,12 +2165,12 @@ Crypto.prototype._processReceivedRoomKeyRequest = async function(req) {
 
     // if we don't have a decryptor for this room/alg, we don't have
     // the keys for the requested events, and can drop the requests.
-    if (!this._roomDecryptors[roomId]) {
+    if (!this._roomDecryptors.has(roomId)) {
         logger.log(`room key request for unencrypted room ${roomId}`);
         return;
     }
 
-    const decryptor = this._roomDecryptors[roomId][alg];
+    const decryptor = this._roomDecryptors.get(roomId).get(alg);
     if (!decryptor) {
         logger.log(`room key request for unknown alg ${alg} in room ${roomId}`);
         return;
@@ -2245,18 +2243,18 @@ Crypto.prototype._getRoomDecryptor = function(roomId, algorithm) {
 
     roomId = roomId || null;
     if (roomId) {
-        decryptors = this._roomDecryptors[roomId];
+        decryptors = this._roomDecryptors.get(roomId);
         if (!decryptors) {
-            this._roomDecryptors[roomId] = decryptors = {};
+            this._roomDecryptors[roomId] = decryptors = new Map();
         }
 
-        alg = decryptors[algorithm];
+        alg = decryptors.get(algorithm);
         if (alg) {
             return alg;
         }
     }
 
-    const AlgClass = algorithms.DECRYPTION_CLASSES[algorithm];
+    const AlgClass = algorithms.DECRYPTION_CLASSES.get(algorithm);
     if (!AlgClass) {
         throw new algorithms.DecryptionError(
             'UNKNOWN_ENCRYPTION_ALGORITHM',
@@ -2272,7 +2270,7 @@ Crypto.prototype._getRoomDecryptor = function(roomId, algorithm) {
     });
 
     if (decryptors) {
-        decryptors[algorithm] = alg;
+        decryptors.set(algorithm, alg);
     }
     return alg;
 };

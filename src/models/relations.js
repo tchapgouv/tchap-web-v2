@@ -41,8 +41,8 @@ export default class Relations extends EventEmitter {
         this.relationType = relationType;
         this.eventType = eventType;
         this._relations = new Set();
-        this._annotationsByKey = {};
-        this._annotationsBySender = {};
+        this._annotationsByKey = new Map();
+        this._annotationsBySender = new Map();
         this._sortedAnnotationsByKey = [];
         this._targetEvent = null;
     }
@@ -167,9 +167,10 @@ export default class Relations extends EventEmitter {
             return;
         }
 
-        let eventsForKey = this._annotationsByKey[key];
+        let eventsForKey = this._annotationsByKey.get(key);
         if (!eventsForKey) {
-            eventsForKey = this._annotationsByKey[key] = new Set();
+            eventsForKey = new Set();
+            this._annotationsByKey.set(key, eventsForKey);
             this._sortedAnnotationsByKey.push([key, eventsForKey]);
         }
         // Add the new event to the set for this key
@@ -182,9 +183,10 @@ export default class Relations extends EventEmitter {
         });
 
         const sender = event.getSender();
-        let eventsFromSender = this._annotationsBySender[sender];
+        let eventsFromSender = this._annotationsBySender.get(sender);
         if (!eventsFromSender) {
-            eventsFromSender = this._annotationsBySender[sender] = new Set();
+            eventsFromSender = new Set();
+            this._annotationsBySender.set(sender, eventsFromSender);
         }
         // Add the new event to the set for this sender
         eventsFromSender.add(event);
@@ -196,7 +198,7 @@ export default class Relations extends EventEmitter {
             return;
         }
 
-        const eventsForKey = this._annotationsByKey[key];
+        const eventsForKey = this._annotationsByKey.get(key);
         if (eventsForKey) {
             eventsForKey.delete(event);
 
@@ -209,7 +211,7 @@ export default class Relations extends EventEmitter {
         }
 
         const sender = event.getSender();
-        const eventsFromSender = this._annotationsBySender[sender];
+        const eventsFromSender = this._annotationsBySender.get(sender);
         if (eventsFromSender) {
             eventsFromSender.delete(event);
         }
@@ -269,7 +271,7 @@ export default class Relations extends EventEmitter {
      *
      * This is currently only supported for the annotation relation type.
      *
-     * @return {Object}
+     * @return {Map<string, Set>}
      * An object with each relation sender as a key and the matching Set of
      * events for that sender as a value.
      */

@@ -726,7 +726,7 @@ function MegolmDecryption(params) {
 
     // events which we couldn't decrypt due to unknown sessions / indexes: map from
     // senderKey|sessionId to Set of MatrixEvents
-    this._pendingEvents = {};
+    this._pendingEvents = new Map();
 
     // this gets stubbed out by the unit tests.
     this.olmlib = olmlib;
@@ -850,10 +850,10 @@ MegolmDecryption.prototype._requestKeysForEvent = function(event) {
 MegolmDecryption.prototype._addEventToPendingList = function(event) {
     const content = event.getWireContent();
     const k = content.sender_key + "|" + content.session_id;
-    if (!this._pendingEvents[k]) {
-        this._pendingEvents[k] = new Set();
+    if (!this._pendingEvents.has(k)) {
+        this._pendingEvents.set(k, new Set());
     }
-    this._pendingEvents[k].add(event);
+    this._pendingEvents.get(k).add(event);
 };
 
 /**
@@ -866,13 +866,13 @@ MegolmDecryption.prototype._addEventToPendingList = function(event) {
 MegolmDecryption.prototype._removeEventFromPendingList = function(event) {
     const content = event.getWireContent();
     const k = content.sender_key + "|" + content.session_id;
-    if (!this._pendingEvents[k]) {
+    if (!this._pendingEvents.has(k)) {
         return;
     }
 
-    this._pendingEvents[k].delete(event);
-    if (this._pendingEvents[k].size === 0) {
-        delete this._pendingEvents[k];
+    this._pendingEvents.get(k).delete(event);
+    if (this._pendingEvents.get(k).size === 0) {
+        this._pendingEvents.delete(k);
     }
 };
 
@@ -1120,12 +1120,12 @@ MegolmDecryption.prototype.importRoomKey = function(session) {
  */
 MegolmDecryption.prototype._retryDecryption = async function(senderKey, sessionId) {
     const k = senderKey + "|" + sessionId;
-    const pending = this._pendingEvents[k];
+    const pending = this._pendingEvents.get(k);
     if (!pending) {
         return true;
     }
 
-    delete this._pendingEvents[k];
+    this._pendingEvents.delete(k);
 
     await Promise.all([...pending].map(async (ev) => {
         try {
@@ -1135,7 +1135,7 @@ MegolmDecryption.prototype._retryDecryption = async function(senderKey, sessionI
         }
     }));
 
-    return !this._pendingEvents[k];
+    return !this._pendingEvents.has(k);
 };
 
 base.registerAlgorithm(

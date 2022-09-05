@@ -67,9 +67,13 @@ function RoomState(roomId, oobMemberFlags = undefined) {
     this.members = {
         // userId: RoomMember
     };
-    this.events = {
-        // eventType: { stateKey: MatrixEvent }
-    };
+
+    /**
+     * Map event type → Map state key → MatrixEvent
+     * @type Map<string, Map<string, MatrixEvent>>
+     */
+    this.events = new Map();
+
     this.paginationToken = null;
 
     this._sentinels = {
@@ -78,7 +82,7 @@ function RoomState(roomId, oobMemberFlags = undefined) {
     this._updateModifiedTime();
 
     // stores fuzzy matches to a list of userIDs (applies utils.removeHiddenChars to keys)
-    this._displayNameToUserIds = {};
+    this._displayNameToUserIds = new Map();
     this._userIdsToDisplayNames = {};
     this._tokenToInvite = {}; // 3pid invite state_key to m.room.member invite
     this._joinedMemberCount = null; // cache of the number of joined members
@@ -210,14 +214,14 @@ RoomState.prototype.getSentinelMember = function(userId) {
  * <code>undefined</code>, else a single event (or null if no match found).
  */
 RoomState.prototype.getStateEvents = function(eventType, stateKey) {
-    if (!this.events[eventType]) {
+    if (!this.events.has(eventType)) {
         // no match
         return stateKey === undefined ? [] : null;
     }
     if (stateKey === undefined) { // return all values
-        return utils.values(this.events[eventType]);
+        return utils.values(this.events.get(eventType));
     }
-    const event = this.events[eventType][stateKey];
+    const event = this.events.get(eventType).get(stateKey);
     return event ? event : null;
 };
 
@@ -237,8 +241,8 @@ RoomState.prototype.clone = function() {
     const status = this._oobMemberFlags.status;
     this._oobMemberFlags.status = OOB_STATUS_NOTSTARTED;
 
-    Object.values(this.events).forEach((eventsByStateKey) => {
-        const eventsForType = Object.values(eventsByStateKey);
+    this.events.forEach((eventsByStateKey) => {
+        const eventsForType = eventsByStateKey.values();
         copy.setStateEvents(eventsForType);
     });
 
@@ -275,8 +279,8 @@ RoomState.prototype.clone = function() {
  */
 RoomState.prototype.setUnknownStateEvents = function(events) {
     const unknownStateEvents = events.filter((event) => {
-        return this.events[event.getType()] === undefined ||
-            this.events[event.getType()][event.getStateKey()] === undefined;
+        return this.events.get(event.getType()) === undefined ||
+            this.events.get(event.getType()).get(event.getStateKey()) === undefined;
     });
 
     this.setStateEvents(unknownStateEvents);
@@ -384,10 +388,11 @@ RoomState.prototype._getOrCreateMember = function(userId, event) {
 };
 
 RoomState.prototype._setStateEvent = function(event) {
-    if (this.events[event.getType()] === undefined) {
-        this.events[event.getType()] = {};
+    if (this.events.get(event.getType()) === undefined) {
+        this.events.set(event.getType(), new Map());
     }
-    this.events[event.getType()][event.getStateKey()] = event;
+    this.events.get(event.getType())
+        .set(event.getStateKey(), event);
 };
 
 RoomState.prototype._updateMember = function(member) {
@@ -537,7 +542,7 @@ RoomState.prototype.getLastModifiedTime = function() {
  * @return {string[]} An array of user IDs or an empty array.
  */
 RoomState.prototype.getUserIdsWithDisplayName = function(displayName) {
-    return this._displayNameToUserIds[utils.removeHiddenChars(displayName)] || [];
+    return this._displayNameToUserIds.get(utils.removeHiddenChars(displayName)) || [];
 };
 
 /**
@@ -747,11 +752,11 @@ function _updateDisplayNameCache(roomState, userId, displayName) {
         // the lot.
         const strippedOldName = utils.removeHiddenChars(oldName);
 
-        const existingUserIds = roomState._displayNameToUserIds[strippedOldName];
+        const existingUserIds = roomState._displayNameToUserIds.get(strippedOldName);
         if (existingUserIds) {
             // remove this user ID from this array
             const filteredUserIDs = existingUserIds.filter((id) => id !== userId);
-            roomState._displayNameToUserIds[strippedOldName] = filteredUserIDs;
+            roomState._displayNameToUserIds.set(strippedOldName, filteredUserIDs);
         }
     }
 
@@ -760,10 +765,10 @@ function _updateDisplayNameCache(roomState, userId, displayName) {
     const strippedDisplayname = displayName && utils.removeHiddenChars(displayName);
     // an empty stripped displayname (undefined/'') will be set to MXID in room-member.js
     if (strippedDisplayname) {
-        if (!roomState._displayNameToUserIds[strippedDisplayname]) {
-            roomState._displayNameToUserIds[strippedDisplayname] = [];
+        if (!roomState._displayNameToUserIds.has(strippedDisplayname)) {
+            roomState._displayNameToUserIds.set(strippedDisplayname, []);
         }
-        roomState._displayNameToUserIds[strippedDisplayname].push(userId);
+        roomState._displayNameToUserIds.get(strippedDisplayname).push(userId);
     }
 }
 

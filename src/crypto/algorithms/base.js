@@ -26,17 +26,17 @@ import Promise from 'bluebird';
  * map of registered encryption algorithm classes. A map from string to {@link
  * module:crypto/algorithms/base.EncryptionAlgorithm|EncryptionAlgorithm} class
  *
- * @type {Object.<string, function(new: module:crypto/algorithms/base.EncryptionAlgorithm)>}
+ * @type {Map.<string, function(new: module:crypto/algorithms/base.EncryptionAlgorithm)>}
  */
-export const ENCRYPTION_CLASSES = {};
+export const ENCRYPTION_CLASSES = new Map();
 
 /**
  * map of registered encryption algorithm classes. Map from string to {@link
  * module:crypto/algorithms/base.DecryptionAlgorithm|DecryptionAlgorithm} class
  *
- * @type {Object.<string, function(new: module:crypto/algorithms/base.DecryptionAlgorithm)>}
+ * @type {Map.<string, function(new: module:crypto/algorithms/base.DecryptionAlgorithm)>}
  */
-export const DECRYPTION_CLASSES = {};
+export const DECRYPTION_CLASSES = new Map();
 
 /**
  * base type for encryption implementations
@@ -231,6 +231,6 @@ export class UnknownDeviceError extends Error {
  *     implementation
  */
 export function registerAlgorithm(algorithm, encryptor, decryptor) {
-    ENCRYPTION_CLASSES[algorithm] = encryptor;
-    DECRYPTION_CLASSES[algorithm] = decryptor;
+    ENCRYPTION_CLASSES.set(algorithm, encryptor);
+    DECRYPTION_CLASSES.set(algorithm, decryptor);
 }
