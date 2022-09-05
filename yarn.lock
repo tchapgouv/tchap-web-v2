@@ -6153,9 +6153,8 @@ math-random@^1.0.1:
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.4.tgz#5dd6943c938548267016d4e34f057583080c514c"
   integrity sha512-rUxjysqif/BZQH2yhd5Aaq7vXMSx9NdEsQcyA07uEzIvxgI7zIr33gGsh+RU0/XjmQpCW7RsVof1vlkvQVCK5A==
 
-"matrix-js-sdk@github:tchapgouv/matrix-js-sdk#v2.5.6-tchap-rc.1":
+"matrix-js-sdk@file:matrix-js-sdk":
   version "2.2.0"
-  resolved "git+ssh://git@github.com/tchapgouv/matrix-js-sdk.git#04071e588e2af290a3e1f724ccf6167d991015d3"
   dependencies:
     another-json "^0.2.0"
     babel-runtime "^6.26.0"
@@ -6176,9 +6175,8 @@ matrix-mock-request@^1.2.3:
     bluebird "^3.5.0"
     expect "^1.20.2"
 
-"matrix-react-sdk@github:tchapgouv/matrix-react-sdk#v2.5.6-tchap-rc.1":
+"matrix-react-sdk@file:matrix-react-sdk":
   version "2.5.5-tchap"
-  resolved "git+ssh://git@github.com/tchapgouv/matrix-react-sdk.git#101456a9f4336ab577fd7882b932fb52b13593c1"
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
     babel-runtime "^6.26.0"
@@ -6205,7 +6203,7 @@ matrix-mock-request@^1.2.3:
     linkifyjs "^2.1.6"
     lodash "^4.17.15"
     lolex "2.3.2"
-    matrix-js-sdk "github:tchapgouv/matrix-js-sdk#v2.5.6-tchap-rc.1"
+    matrix-js-sdk "file:../usr/local/share/.cache/yarn/v6/npm-matrix-react-sdk-2.5.5-tchap-9f6f2c42-bcac-4f8e-8e49-fde6666f84a5-1662384515032/node_modules/matrix-js-sdk"
     optimist "^0.6.1"
     pako "^1.0.5"
     png-chunks-extract "^1.0.0"
