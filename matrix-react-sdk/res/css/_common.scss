@@ -1,0 +1,919 @@
+/*
+Copyright 2015, 2016 OpenMarket Ltd
+Copyright 2017 Vector Creations Ltd
+Copyright 2017 New Vector Ltd
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+html {
+    /* hack to stop overscroll bounce on OSX and iOS.
+       N.B. Breaks things when we have legitimate horizontal overscroll */
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: $font-family;
+    font-size: 15px;
+    background-color: $primary-bg-color;
+    color: $primary-fg-color;
+    border: 0px;
+    margin: 0px;
+}
+
+pre, code {
+    font-family: $monospace-font-family;
+    font-size: 100% !important;
+}
+
+.error, .warning {
+    color: $warning-color;
+}
+
+b {
+    // On Firefox, the default weight for `<b>` is `bolder` which results in no bold
+    // effect since we only have specific weights of our fonts available.
+    font-weight: bold;
+}
+
+h2 {
+    color: $primary-fg-color;
+    font-weight: 400;
+    font-size: 18px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+a:hover,
+a:link,
+a:visited {
+    color: $accent-color-alt;
+}
+
+input[type=text],
+input[type=search],
+input[type=password] {
+    padding: 9px;
+    font-family: $font-family;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 0;
+}
+
+input[type=text].mx_textinput_icon,
+input[type=search].mx_textinput_icon {
+    padding-left: 36px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+
+// FIXME THEME - Tint by CSS rather than referencing a duplicate asset
+input[type=text].mx_textinput_icon.mx_textinput_search,
+input[type=search].mx_textinput_icon.mx_textinput_search {
+    background-image: url('$(res)/img/feather-customised/search-input.svg');
+}
+
+// dont search UI as not all browsers support it,
+// we implement it ourselves where needed instead
+input[type=search]::-webkit-search-decoration,
+input[type=search]::-webkit-search-cancel-button,
+input[type=search]::-webkit-search-results-button,
+input[type=search]::-webkit-search-results-decoration {
+    display: none;
+}
+
+// Override Firefox's UA style so we get a consistent look across browsers
+input::placeholder,
+textarea::placeholder {
+    opacity: initial;
+}
+
+input[type=text], input[type=password], textarea {
+    background-color: transparent;
+    color: $primary-fg-color;
+}
+
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Required by Firefox */
+textarea {
+    font-family: $font-family;
+    color: $primary-fg-color;
+}
+
+// This is used to hide the standard outline added by browsers for
+// accessible (focusable) components. Not intended for buttons, but
+// should be used on things like focusable containers where the outline
+// is usually not helping anyone.
+.mx_HiddenFocusable {
+    outline: none;
+}
+
+// .mx_textinput is a container for a text input
+// + some other controls like buttons, ...
+// it has the appearance of a text box so the controls
+// appear to be part of the input
+
+.mx_Dialog, .mx_MatrixChat {
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=text],
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=search],
+    .mx_textinput {
+        display: block;
+        box-sizing: border-box;
+        background-color: transparent;
+        color: $input-darker-fg-color;
+        border-radius: 4px;
+        border: 1px solid $dialog-close-fg-color;
+        // these things should probably not be defined
+        // globally
+        margin: 9px;
+        flex: 0 0 auto;
+    }
+
+    .mx_textinput {
+        display: flex;
+        align-items: center;
+
+        > input[type=text],
+        > input[type=search] {
+            border: none;
+            flex: 1;
+            color: $primary-fg-color;
+        }
+    }
+
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=text]::placeholder,
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=search]::placeholder,
+    .mx_textinput input::placeholder {
+        color: $roomsublist-label-fg-color;
+    }
+}
+
+/*** panels ***/
+.dark-panel {
+    background-color: $dark-panel-bg-color;
+}
+
+.dark-panel {
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=text],
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=search],
+    .mx_textinput {
+        color: $input-darker-fg-color;
+        background-color: $input-darker-bg-color;
+        border: none;
+    }
+}
+
+.light-panel {
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=text],
+    :not(.mx_textinput):not(.mx_Field):not(.mx_no_textinput) > input[type=search],
+    .mx_textinput {
+        color: $input-lighter-fg-color;
+        background-color: $input-lighter-bg-color;
+        border: none;
+    }
+}
+
+/* Prevent ugly dotted highlight around selected elements in Firefox */
+::-moz-focus-inner {
+    border: 0;
+}
+
+/* applied to side-panels and messagepanel when in RoomSettings */
+.mx_fadable {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* XXX: critical hack to GeminiScrollbar to allow them to work in FF 42 and Chrome 48.
+   Stop the scrollbar view from pushing out the container's overall sizing, which causes
+   flexbox to adapt to the new size and cause the view to keep growing.
+ */
+.gm-scrollbar-container .gm-scroll-view {
+    position: absolute;
+}
+
+/* Expand thumbs on hoverover */
+.gm-scrollbar {
+    border-radius: 5px ! important;
+}
+.gm-scrollbar.-vertical {
+    width: 6px;
+    transition: width 120ms ease-out ! important;
+}
+.gm-scrollbar.-vertical:hover,
+.gm-scrollbar.-vertical:active {
+    width: 8px;
+    transition: width 120ms ease-out ! important;
+}
+.gm-scrollbar.-horizontal {
+    height: 6px;
+    transition: height 120ms ease-out ! important;
+}
+.gm-scrollbar.-horizontal:hover,
+.gm-scrollbar.-horizontal:active {
+    height: 8px;
+    transition: height 120ms ease-out ! important;
+}
+
+// These are magic constants which are excluded from tinting, to let themes
+// (which only have CSS, unlike skins) tell the app what their non-tinted
+// colourscheme is by inspecting the stylesheet DOM.
+//
+// They are not used for layout!!
+#mx_theme_accentColor {
+    color: $accent-color;
+}
+
+#mx_theme_secondaryAccentColor {
+    color: $secondary-accent-color;
+}
+
+#mx_theme_tertiaryAccentColor {
+    color: $roomsublist-label-bg-color;
+}
+
+/* Expected z-indexes for dialogs:
+    4000 - Default wrapper index
+    4009 - Static dialog background
+    4010 - Static dialog itself
+    4011 - Standard dialog background
+    4012 - Standard dialog itself
+
+   These are set up such that the static dialog always appears
+   underneath the standard dialogs.
+ */
+
+.mx_Dialog_wrapper {
+    position: fixed;
+    z-index: 4000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Spinner Dialog overide */
+.mx_Dialog_wrapper.mx_Dialog_spinner .mx_Dialog {
+    width: auto;
+    border-radius: 8px;
+    padding: 0px;
+    box-shadow: none;
+}
+
+.mx_Dialog {
+    background-color: $primary-bg-color;
+    color: $light-fg-color;
+    z-index: 4012;
+    font-weight: 300;
+    font-size: 15px;
+    position: relative;
+    padding: 25px 30px 30px 30px;
+    max-height: 80%;
+    box-shadow: 2px 15px 30px 0 $dialog-shadow-color;
+    border-radius: 4px;
+    overflow-y: auto;
+}
+
+.mx_Dialog_fixedWidth {
+    width: 60vw;
+    max-width: 704px;
+}
+
+.mx_Dialog_staticWrapper .mx_Dialog {
+    z-index: 4010;
+}
+
+.mx_Dialog_background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $dialog-backdrop-color;
+    opacity: 0.8;
+    z-index: 4011;
+}
+
+.mx_Dialog_background.mx_Dialog_staticBackground {
+    z-index: 4009;
+}
+
+.mx_Dialog_wrapperWithStaticUnder .mx_Dialog_background {
+    // Roughly half of what it would normally be - we don't want to black out
+    // the app, just make it clear that the dialogs are stacked.
+    opacity: 0.4;
+}
+
+.mx_Dialog_lightbox .mx_Dialog_background {
+    opacity: 0.85;
+    background-color: $lightbox-background-bg-color;
+}
+
+.mx_Dialog_lightbox .mx_Dialog {
+    border-radius: 0px;
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    pointer-events: none;
+}
+
+.mx_Dialog_header {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.mx_Dialog_title {
+    font-size: 22px;
+    line-height: 36px;
+    color: $dialog-title-fg-color;
+}
+
+.mx_Dialog_header.mx_Dialog_headerWithButton > .mx_Dialog_title {
+    text-align: center;
+}
+
+.mx_Dialog_title.danger {
+    color: $warning-color;
+}
+
+.mx_Dialog_cancelButton {
+    mask: url('$(res)/img/feather-customised/cancel.svg');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: cover;
+    width: 14px;
+    height: 14px;
+    background-color: $dialog-close-fg-color;
+    cursor: pointer;
+    position: absolute;
+    top: 4px;
+    right: 0px;
+}
+
+.mx_Dialog_content {
+    margin: 24px 0 68px;
+    font-size: 14px;
+    color: $primary-fg-color;
+    word-wrap: break-word;
+}
+
+.mx_Dialog_buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.mx_Dialog button, .mx_Dialog input[type="submit"] {
+    @mixin mx_DialogButton;
+    margin-left: 0px;
+    margin-right: 8px;
+
+    // flip colours for the secondary ones
+    font-weight: 600;
+    border: 1px solid $accent-color ! important;
+    color: $accent-color;
+    background-color: $button-secondary-bg-color;
+}
+
+.mx_Dialog button:last-child {
+    margin-right: 0px;
+}
+
+.mx_Dialog button:hover, .mx_Dialog input[type="submit"]:hover {
+    @mixin mx_DialogButton_hover;
+}
+
+.mx_Dialog button:focus, .mx_Dialog input[type="submit"]:focus {
+    filter: brightness($focus-brightness);
+}
+
+.mx_Dialog button.mx_Dialog_primary, .mx_Dialog  input[type="submit"].mx_Dialog_primary {
+    color: $accent-fg-color;
+    background-color: $accent-color;
+    min-width: 156px;
+}
+
+.mx_Dialog button.danger, .mx_Dialog input[type="submit"].danger {
+    background-color: $warning-color;
+    border: unset !important;
+    color: $accent-fg-color;
+}
+
+.mx_Dialog button:disabled, .mx_Dialog input[type="submit"]:disabled {
+    background-color: $light-fg-color;
+    border: solid 1px $light-fg-color;
+    opacity: 0.7;
+}
+
+// TODO: Review mx_GeneralButton usage to see if it can use a different class
+// These classes were brought in from the old UserSettings and are included here to avoid
+// breaking the app.
+// Ref: https://github.com/vector-im/riot-web/issues/8420
+.mx_GeneralButton {
+    @mixin mx_DialogButton;
+    display: inline;
+    margin: auto;
+}
+
+.mx_GeneralButton:hover {
+    @mixin mx_DialogButton_hover;
+}
+
+.mx_linkButton {
+    cursor: pointer;
+    color: $accent-color;
+}
+
+.mx_TextInputDialog_label {
+    text-align: left;
+    padding-bottom: 12px;
+}
+
+.mx_TextInputDialog_input {
+    font-size: 15px;
+    border-radius: 3px;
+    border: 1px solid $input-border-color;
+    padding: 9px;
+    color: $primary-fg-color;
+    background-color: $primary-bg-color;
+}
+
+::-moz-selection {
+    background-color: $accent-color;
+    color: $selection-fg-color;
+}
+
+::selection {
+    background-color: $accent-color;
+    color: $selection-fg-color;
+}
+
+.mx_textButton {
+    @mixin mx_DialogButton_small;
+}
+
+.mx_textButton:hover {
+    @mixin mx_DialogButton_hover;
+}
+
+.mx_button_row {
+    margin-top: 69px;
+}
+
+.mx_Beta {
+    color: red;
+    margin-right: 10px;
+    position: relative;
+    top: -3px;
+    background-color: white;
+    padding: 0 4px;
+    border-radius: 3px;
+    border: 1px solid darkred;
+    cursor: help;
+    transition-duration: 200ms;
+    font-size: smaller;
+    filter: opacity(0.5);
+}
+
+.mx_Beta:hover {
+    color: white;
+    border: 1px solid gray;
+    background-color: darkred;
+}
+
+.mx_TintableSvgButton {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+}
+
+.mx_TintableSvgButton object {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.mx_TintableSvgButton span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+// username colors
+// used by SenderProfile & RoomPreviewBar
+.mx_Username_color1 {
+    color: $username-variant1-color;
+}
+
+.mx_Username_color2 {
+    color: $username-variant2-color;
+}
+
+.mx_Username_color3 {
+    color: $username-variant3-color;
+}
+
+.mx_Username_color4 {
+    color: $username-variant4-color;
+}
+
+.mx_Username_color5 {
+    color: $username-variant5-color;
+}
+
+.mx_Username_color6 {
+    color: $username-variant6-color;
+}
+
+.mx_Username_color7 {
+    color: $username-variant7-color;
+}
+
+.mx_Username_color8 {
+    color: $username-variant8-color;
+}
+
+
+// Custom Tchap elements
+
+.tc_RepFr_welcome_logo {
+    height: 50px;
+    padding-left: 15px;
+}
+
+.tc_RepFr_logo {
+    width: 100%;
+    height: 80px;
+    border-top: 1px solid $panel-divider-color;
+}
+
+.tc_RepFr_logo img {
+    width: 100px;
+    height: 59px;
+    margin: 10px auto 5px calc(50% - 50px);
+}
+
+.tc_Bottom_Links {
+    margin: 0 auto 7px auto;
+}
+
+.tc_Bottom_Links a {
+    color: #2e2f32;
+    text-decoration: underline;
+}
+
+.tc_PasswordHelper {
+    position: relative;
+    top: 7px;
+    left: 5px;
+}
+
+// Warning modal about loosing keys
+.tc_ThreeColumn_block {
+    margin-top: 30px;
+    margin-bottom: -40px;
+}
+
+.tc_ThreeColumn_block_image {
+    width: 100px;
+    height: 100px;
+    display: inline-flex;
+}
+
+.tc_ThreeColumn_block_image img {
+    margin: 0 auto;
+}
+
+.tc_ThreeColumn_block_content {
+    padding: 0 30px 0 30px;
+    margin-bottom: 10px;
+}
+
+.tc_ThreeColumn_block_content p {
+    margin-bottom: 20px;
+}
+
+.tc_ThreeColumn_block_bordered {
+    width: calc(33% - 1px);
+    border-right: 1px solid $input-darker-fg-color;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    display: inline-flex;
+}
+
+.tc_ThreeColumn_block_last {
+    width: calc(33% - 1px);
+    position: relative;
+    text-align: center;
+    display: inline-flex;
+}
+
+.tc_ThreeColumn_block_separator {
+    position: absolute;
+    right: 0;
+    top: 38%;
+    margin-right: -10px;
+    background: white;
+    color: $input-darker-fg-color;
+}
+
+.tc_TwoColumn_block {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    margin-bottom: -40px;
+}
+
+.tc_TwoColumn_block_content {
+    width: 42%;
+    background-color: #F2F1F8;
+    border-radius: 20px;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tc_TwoColumn_block_content button {
+    max-width: 150px;
+}
+
+.tc_exportE2eKeysSuccessDialog_img {
+    text-align: center;
+}
+
+.mx_exportE2eKeysSuccessDialog .mx_Dialog_content {
+    margin-bottom: 10px;
+}
+
+.tc_LinkSharing_Helper {
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+
+.tc_ShareDialog {
+    border-color: #e7e7e7 !important;
+}
+
+.tc_ExternSharing_warning {
+    font-size: 14px;
+    color: #747474;
+    margin-bottom: 6px;
+    img {
+        position: relative;
+    }
+    span {
+        margin-left: 8px;
+    }
+}
+
+.tc_CreateRoomDialog_RoomOption > div {
+    background-color: #f2f5f8;
+    border-radius: 6px;
+    margin: 8px 0 8px 0;
+    padding: 4px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.tc_CreateRoomDialog_RoomOption_private {
+    border: 0 solid #eb5757;
+    color: #eb5757;
+    &::before {
+        width: 12px;
+        height: 16px;
+        content: "";
+        display: inline-block;
+        vertical-align: sub;
+        background-image: url("$(res)/img/tchap/create-room-dialog/padlock-private.svg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        margin-right: 4px;
+    }
+}
+
+.tc_CreateRoomDialog_RoomOption_external {
+    border: 0 solid #f07a12;
+    color: #f07a12;
+    &::before {
+        width: 12px;
+        height: 16px;
+        content: "";
+        display: inline-block;
+        vertical-align: sub;
+        background-image: url("$(res)/img/tchap/create-room-dialog/padlock-external.svg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        margin-right: 4px;
+    }
+}
+
+.tc_CreateRoomDialog_RoomOption_forum {
+    border: 0 solid #27ae60;
+    color: #27ae60;
+    &::before {
+        width: 11px;
+        height: 14px;
+        content: "";
+        display: inline-block;
+        vertical-align: sub;
+        background-image: url("$(res)/img/tchap/create-room-dialog/padlock-forum.svg");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        margin-right: 4px;
+    }
+}
+
+.tc_CreateRoomDialog_RoomOption_descr {
+    color: grey;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 0 4px;
+}
+
+.tc_CreateRoomDialog_RoomOption_suboption {
+    display: none;
+    color: grey;
+    font-weight: normal;
+    font-size: 12px;
+    padding: 10px 4px 0 4px;
+    .mx_SettingsFlag span {
+        font-size: 12px !important;
+    }
+}
+
+.tc_CreateRoomDialog_RoomOption_selected {
+    border-width: 2px;
+    .tc_CreateRoomDialog_RoomOption_suboption {
+        display: block;
+    }
+}
+
+.mx_MessageContextMenu_field {
+    padding: 4px 6px 3px 23px !important;
+}
+
+.mx_MessageContextMenu_field_icon::after {
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: 0 center;
+    mask-position: 0 center;
+    -webkit-mask-size: 16px;
+    mask-size: 16px;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    content: "";
+    left: 6px;
+    background-color: #2e2f32;
+}
+
+.mx_MessageContextMenu_field_quote::after {
+    mask-image: url('$(res)/img/tchap/room-context-menu/quote.svg');
+}
+
+.mx_MessageContextMenu_field_share::after {
+    mask-image: url('$(res)/img/tchap/room-context-menu/share.svg');
+}
+
+.mx_MessageContextMenu_field_reply::after {
+    mask-image: url('$(res)/img/tchap/room-context-menu/reply.svg');
+}
+
+.mx_MessageContextMenu_field_forward::after {
+    mask-image: url('$(res)/img/tchap/room-context-menu/reply.svg');
+    transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+}
+
+.mx_MessageContextMenu_field_remove::after {
+    mask-image: url('$(res)/img/tchap/room-context-menu/trash.svg');
+}
+
+.mx_MessageContextMenu_field_favourite_out::after {
+    mask-image: url('$(res)/img/tchap/room-context-menu/favourite_outlined.svg');
+}
+
+.mx_MessageContextMenu_field_favourite::after {
+    mask-image: url('$(res)/img/tchap/room-context-menu/favourite.svg');
+}
+
+.mx_TopLeftMenu {
+    .mx_TopLeftMenu_section_withIcon {
+        li.mx_TopLeftMenu_icon_favourite::after {
+            mask-image: url('$(res)/img/tchap/room-context-menu/favourite_outlined.svg');
+        }
+    }
+}
+
+
+// Favourites
+.tc_FavouritesDialog {
+    width: 90vw;
+    max-width: 1000px;
+    height: 80vh;
+    .mx_Dialog_title {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    .tc_FavouritesDialog_content {
+        margin: 0;
+        padding: 0 35px 25px 35px;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        position: absolute;
+        top: 78px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        min-height: 0;
+        flex-grow: 1;
+        overflow: auto;
+        box-sizing: border-box;
+        min-width: 580px;
+        .mx_EventTile:hover .mx_EventTile_line {
+            background-color: unset;
+
+        }
+        a:hover, a:link, a:visited {
+            color: #2e2f32;
+            text-decoration: none;
+        }
+        .mx_MFileBody_download {
+            display: none;
+        }
+    }
+}
+
+.tc_FavouritesDialog_hr {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    &::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #747474;
+    }
+    &::after {
+        margin-left: .25em;
+    }
+    a {
+        cursor: pointer;
+    }
+}
+
+.tc_FavouritesDialog_eventBlock {
+    margin-bottom: 14px;
+}
+
+.tc_FavouritesDialog_roomName {
+    color: #61708b;
+    font-weight: 700;
+    margin-right: 6px;
+}
+
+.tc_FavouritesDialog_timestamp {
+    font-size: 11px;
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.tc_ExpiredAccountDialog_link {
+    position: absolute;
+    left: 34px;
+    bottom: 36px;
+}
