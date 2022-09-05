@@ -58,6 +58,7 @@
         "build:dev": "yarn build:js-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle:dev",
         "build:scalingo": "yarn build:js-sdk && yarn install:react-sdk && yarn build:react-sdk && yarn reskindex && yarn build:res && yarn build:bundle",
         "dist": "scripts/package.sh",
+        "scalingo-prebuild": "scripts/prebuild-package-scalingo.sh",
         "scalingo-postbuild": "scripts/package-scalingo.sh",
         "install:electron": "install-app-deps",
         "install:react-sdk": "node scripts/yarn-sub.js matrix-react-sdk install --production=false",
