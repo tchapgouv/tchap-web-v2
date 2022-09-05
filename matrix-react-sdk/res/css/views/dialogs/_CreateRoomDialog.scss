@@ -1,0 +1,72 @@
+/*
+Copyright 2017 Michael Telatynski <7t3chguy@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.mx_CreateRoomDialog_details_summary {
+    outline: none;
+}
+
+.mx_CreateRoomDialog_label {
+    text-align: left;
+    padding-bottom: 12px;
+}
+
+.mx_CreateRoomDialog_input_container {
+    padding-right: 20px;
+    display: inline-flex;
+    width: 100%;
+}
+
+.mx_CreateRoomDialog_input_avatar_container {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    -webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.mx_CreateRoomDialog_input_avatar_container_restricted {
+    background-image: url('$(res)/img/162d58.png');
+}
+
+.mx_CreateRoomDialog_input_avatar_container_unrestricted {
+    background-image: url('$(res)/img/cccccc.png');
+}
+
+.mx_CreateRoomDialog_input_avatar_padlock {
+    position: absolute;
+    left: 61px;
+    top: 115px;
+}
+
+.mx_CreateRoomDialog_input_avatar_container img {
+    width: 28px;
+    height: 30px;
+    -webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    position: relative;
+    top: 5px;
+    left: 4px;
+}
+
+.mx_CreateRoomDialog_input {
+    font-size: 15px;
+    border-radius: 3px;
+    border: 1px solid $input-border-color;
+    padding: 9px;
+    color: $primary-fg-color;
+    background-color: $primary-bg-color;
+    width: 100%;
+}
