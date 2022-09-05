@@ -1,0 +1,34 @@
+steps:
+  - label: ":eslint: Lint"
+    command:
+      - "yarn install"
+      - "yarn lint"
+    plugins:
+      - docker#v3.0.1:
+          image: "node:10"
+
+  - label: ":karma: Tests"
+    command:
+      - "yarn install"
+      - "yarn test"
+    plugins:
+      - docker#v3.0.1:
+          image: "node:10"
+
+  - label: "📃 Docs"
+    command:
+      - "yarn install"
+      - "yarn gendoc"
+    plugins:
+      - docker#v3.0.1:
+          image: "node:10"
+
+  - wait
+
+  - label: "🐴 Trigger matrix-react-sdk"
+    trigger: "matrix-react-sdk"
+    branches: "develop"
+    build:
+        branch: "develop"
+        message: "[js-sdk] ${BUILDKITE_MESSAGE}"
+    async: true
