@@ -242,8 +242,11 @@ RoomState.prototype.clone = function() {
     const status = this._oobMemberFlags.status;
     this._oobMemberFlags.status = OOB_STATUS_NOTSTARTED;
 
+    // this.events is a Map of Maps
     this.events.forEach((eventsByStateKey) => {
-        const eventsForType = eventsByStateKey.values();
+        // eventsByStateKey is a Map
+        // eventsByStateKey.values() is an iterator
+        const eventsForType = Array.from(eventsByStateKey.values());
         copy.setStateEvents(eventsForType);
     });
 
