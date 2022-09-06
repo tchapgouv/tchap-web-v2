@@ -219,7 +219,13 @@ RoomState.prototype.getStateEvents = function(eventType, stateKey) {
         return stateKey === undefined ? [] : null;
     }
     if (stateKey === undefined) { // return all values
-        return utils.values(this.events.get(eventType));
+        // this.events.get(eventType) = Map<string, MatrixEvent>
+        // used to be obj, with key=string, value=MatrixEvent
+        // utils.values gets the values for all keys, in an array.
+        // map.values gives an iterable. We want Array.from(map.values()) to get an array.
+        // old : return utils.values(this.events.get(eventType));
+        const map = this.events.get(eventType);
+        return Array.from(map.values());
     }
     const event = this.events.get(eventType).get(stateKey);
     return event ? event : null;
