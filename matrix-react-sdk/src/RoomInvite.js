@@ -275,7 +275,9 @@ function _selectDirectChat(userId) {
         const hisMembership = him.membership;
 
         const roomCreateEvent = room.currentState.getStateEvents("m.room.create");
-        const roomCreateEventDate = roomCreateEvent[0] ? roomCreateEvent[0].event.origin_server_ts : 0;
+        
+        //retrieve the date from the  unique create room event with the new structure : Array[Map:<String, Event>]
+        const roomCreateEventDate = roomCreateEvent[0] ? roomCreateEvent[0].values().next().value.event.origin_server_ts : 0;
 
         // Colliding all the "myMembership" and "hisMembership" possibilities.
 
