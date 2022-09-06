@@ -39,8 +39,8 @@
         "dist": "Build and make a tar file with the output, in the /dist folder. It is the /webapp dir (see build:bundle), compressed."
     },
     "scripts": {
-        "reskindex": "reskindex -h src/header",
-        "reskindex:watch": "reskindex -h src/header -w",
+        "reskindex": "./matrix-react-sdk/scripts/reskindex.js -h src/header",
+        "reskindex:watch": "./matrix-react-sdk/scripts/reskindex.js -h src/header -w",
         "i18n": "matrix-gen-i18n",
         "prunei18n": "matrix-prune-i18n",
         "build:res": "node scripts/copy-res.js",
@@ -89,8 +89,8 @@
         "gemini-scrollbar": "github:matrix-org/gemini-scrollbar#b302279",
         "gfm.css": "^1.1.2",
         "highlight.js": "^9.13.1",
-        "matrix-js-sdk": "file:matrix-js-sdk",
-        "matrix-react-sdk": "file:matrix-react-sdk",
+        "matrix-js-sdk": "link:matrix-js-sdk",
+        "matrix-react-sdk": "link:matrix-react-sdk",
         "modernizr": "^3.6.0",
         "olm": "https://gitlab.matrix.org/api/v4/projects/27/packages/npm/@matrix-org/olm/-/@matrix-org/olm-3.2.8.tgz",
         "prop-types": "^15.6.2",
