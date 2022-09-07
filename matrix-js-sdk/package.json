@@ -1,6 +1,6 @@
 {
   "name": "matrix-js-sdk",
-  "version": "2.2.0-tchap-2.5.7",
+  "version": "2.2.0-tchap-2.5.8",
   "description": "Matrix Client-Server SDK for Javascript",
   "main": "index.js",
   "scripts": {
