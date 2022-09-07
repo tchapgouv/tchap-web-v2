@@ -401,7 +401,7 @@ class RoomStateExplorer extends DevtoolsComponent {
                 {
                     Array.from(this.roomStateEvents.keys()).map((evType) => {
                         const stateGroup = this.roomStateEvents.get(evType);
-                        const stateKeys = stateGroup.keys();
+                        const stateKeys = Array.from(stateGroup.keys());
 
                         let onClickFn;
                         if (stateKeys.length === 1 && stateKeys[0] === '') {
