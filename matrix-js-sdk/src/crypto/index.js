@@ -2245,7 +2245,8 @@ Crypto.prototype._getRoomDecryptor = function(roomId, algorithm) {
     if (roomId) {
         decryptors = this._roomDecryptors.get(roomId);
         if (!decryptors) {
-            this._roomDecryptors[roomId] = decryptors = new Map();
+            decryptors = new Map();
+            this._roomDecryptors.set(roomId, decryptors);
         }
 
         alg = decryptors.get(algorithm);
