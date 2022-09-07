@@ -41,7 +41,16 @@ export default class Relations extends EventEmitter {
         this.relationType = relationType;
         this.eventType = eventType;
         this._relations = new Set();
+        /**
+         * Map relation -> set of events
+         * not sure about types, but probably :
+         * @type Map<Object, Set<Event>>
+         */
         this._annotationsByKey = new Map();
+        /**
+         * Map senderid -> set of events
+         * @type Map<string, Set<Event>>
+         */
         this._annotationsBySender = new Map();
         this._sortedAnnotationsByKey = [];
         this._targetEvent = null;
