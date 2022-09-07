@@ -81,7 +81,7 @@ function EventTimelineSet(room, opts) {
     // just a list - *not* ordered.
     this._timelines = [this._liveTimeline];
     /**
-     * Map event type → event timeline
+     * Map event id → event timeline
      * @type Map<string, EventTimeline>
      */
     this._eventIdToTimeline = new Map();
