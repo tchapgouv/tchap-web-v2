@@ -24,7 +24,7 @@
         "webpack.config.js"
     ],
     "engines": {
-        "node": "14.17.3"
+        "node": ">= 14.17.3 < 17"
     },
     "style": "bundle.css",
     "matrix-react-parent": "matrix-react-sdk",
