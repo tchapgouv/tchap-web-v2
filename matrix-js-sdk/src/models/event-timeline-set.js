@@ -804,7 +804,7 @@ EventTimelineSet.prototype.aggregateRelations = function(event) {
      * Map relationEventType -> Relations
      * @type Map<string, Relations>
      */
-     let relationsWithRelType = relationsForEvent.get(relationType);
+    let relationsWithRelType = relationsForEvent.get(relationType);
     if (!relationsWithRelType) {
         relationsWithRelType = new Map();
         relationsForEvent.set(relationType, relationsWithRelType);
@@ -812,7 +812,7 @@ EventTimelineSet.prototype.aggregateRelations = function(event) {
     /**
      * @type Relations
      */
-     let relationsWithEventType = relationsWithRelType.get(eventType);
+    let relationsWithEventType = relationsWithRelType.get(eventType);
 
     if (!relationsWithEventType) {
         relationsWithEventType = new Relations(

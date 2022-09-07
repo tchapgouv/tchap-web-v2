@@ -86,7 +86,7 @@ function RoomState(roomId, oobMemberFlags = undefined) {
      * Map display name → array of userIds
      * @type Map<string, string[]>
      */
-     this._displayNameToUserIds = new Map();
+    this._displayNameToUserIds = new Map();
     this._userIdsToDisplayNames = {};
     this._tokenToInvite = {}; // 3pid invite state_key to m.room.member invite
     this._joinedMemberCount = null; // cache of the number of joined members
