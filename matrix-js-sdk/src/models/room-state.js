@@ -219,7 +219,8 @@ RoomState.prototype.getStateEvents = function(eventType, stateKey) {
         return stateKey === undefined ? [] : null;
     }
     if (stateKey === undefined) { // return all values
-        return utils.values(this.events.get(eventType));
+        const map = this.events.get(eventType);
+        return Array.from(map.values());
     }
     const event = this.events.get(eventType).get(stateKey);
     return event ? event : null;
@@ -241,8 +242,11 @@ RoomState.prototype.clone = function() {
     const status = this._oobMemberFlags.status;
     this._oobMemberFlags.status = OOB_STATUS_NOTSTARTED;
 
+    // this.events is a Map of Maps
     this.events.forEach((eventsByStateKey) => {
-        const eventsForType = eventsByStateKey.values();
+        // eventsByStateKey is a Map
+        // eventsByStateKey.values() is an iterator
+        const eventsForType = Array.from(eventsByStateKey.values());
         copy.setStateEvents(eventsForType);
     });
 
