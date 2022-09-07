@@ -270,6 +270,7 @@ export default class ReplyThread extends React.Component {
                 }
             </blockquote>;
         } else if (this.state.loadedEv) {
+            /** @type {MatrixEvent} */
             const ev = this.state.loadedEv;
             const Pill = sdk.getComponent('elements.Pill');
             const room = this.context.matrixClient.getRoom(ev.getRoomId());
@@ -277,7 +278,7 @@ export default class ReplyThread extends React.Component {
                 {
                     _t('<a>In reply to</a> <pill>', {}, {
                         'a': (sub) => <a onClick={this.onQuoteClick} className="mx_ReplyThread_show">{ sub }</a>,
-                        'pill': <Pill type={Pill.TYPE_USER_MENTION} room={room}
+                        'pill': <Pill type={Pill.TYPE_USER_MENTION} userId={ev.getSender()} room={room}
                                       url={makeUserPermalink(ev.getSender())} shouldShowPillAvatar={true} />,
                     })
                 }

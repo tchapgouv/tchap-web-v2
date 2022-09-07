@@ -63,6 +63,8 @@ const Pill = React.createClass({
         shouldShowPillAvatar: PropTypes.bool,
         // Whether to render this pill as if it were highlit by a selection
         isSelected: PropTypes.bool,
+        // explicit userId
+        userId: PropTypes.string,
     },
 
 
@@ -102,7 +104,10 @@ const Pill = React.createClass({
         let resourceId;
         let prefix;
 
-        if (nextProps.url) {
+        if (nextProps.userId) {
+            resourceId = nextProps.userId;
+            prefix = "@";
+        } else if (nextProps.url) {
             // Default to the empty array if no match for simplicity
             // resource and prefix will be undefined instead of throwing
             matrixToMatch = regex.exec(nextProps.url) || [];
@@ -275,7 +280,7 @@ const Pill = React.createClass({
             "mx_UserPill_selected": this.props.isSelected,
         });
 
-        const member = this.state.member
+        const member = this.state.member;
         const displayName = member ? member.rawDisplayName : '';
 
         if (this.state.pillType) {
