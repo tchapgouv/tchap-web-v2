@@ -80,13 +80,21 @@ function EventTimelineSet(room, opts) {
 
     // just a list - *not* ordered.
     this._timelines = [this._liveTimeline];
+    /**
+     * Map event id → event timeline
+     * @type Map<string, EventTimeline>
+     */
     this._eventIdToTimeline = new Map();
 
     this._filter = opts.filter || null;
 
     if (this._unstableClientRelationAggregation) {
         // A tree of objects to access a set of relations for an event, as in:
-        // this._relations[relatesToEventId][relationType][relationEventType]
+        // this._relations.get(relatesToEventId).get(relationType).get(relationEventType)
+        /**
+         * Map relatesToEventId →  relationType -> relationEventType -> Relations
+         * @type Map<string, Map<string, Map<string, Relations>>>
+         */
         this._relations = new Map();
     }
 }
@@ -721,17 +729,28 @@ EventTimelineSet.prototype.setRelationsTarget = function(event) {
         return;
     }
 
+    /**
+     * Map relationType -> relationEventType -> Relations
+     * @type Map<string, Map<string, Relations>>
+     */
     const relationsForEvent = this._relations.get(event.getId());
     if (!relationsForEvent) {
         return;
     }
     // don't need it for non m.replace relations for now
-    const relationsWithRelType = relationsForEvent["m.replace"];
+    /**
+     * Map relationEventType -> Relations
+     * @type Map<string, Relations>
+     */
+     const relationsWithRelType = relationsForEvent.get("m.replace");
     if (!relationsWithRelType) {
         return;
     }
     // only doing replacements for messages for now (e.g. edits)
-    const relationsWithEventType = relationsWithRelType["m.room.message"];
+    /**
+     * @type Relations
+     */
+     const relationsWithEventType = relationsWithRelType.get("m.room.message");
 
     if (relationsWithEventType) {
         relationsWithEventType.setTargetEvent(event);
@@ -772,16 +791,27 @@ EventTimelineSet.prototype.aggregateRelations = function(event) {
 
     // debuglog("Aggregating relation: ", event.getId(), eventType, relation);
 
+    /**
+     * Map relationType -> relationEventType -> Relations
+     * @type Map<string, Map<string, Relations>>
+     */
     let relationsForEvent = this._relations.get(relatesToEventId);
     if (!relationsForEvent) {
         relationsForEvent = new Map();
         this._relations.set(relatesToEventId, relationsForEvent);
     }
+    /**
+     * Map relationEventType -> Relations
+     * @type Map<string, Relations>
+     */
     let relationsWithRelType = relationsForEvent.get(relationType);
     if (!relationsWithRelType) {
         relationsWithRelType = new Map();
         relationsForEvent.set(relationType, relationsWithRelType);
     }
+    /**
+     * @type Relations
+     */
     let relationsWithEventType = relationsWithRelType.get(eventType);
 
     if (!relationsWithEventType) {

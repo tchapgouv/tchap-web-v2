@@ -81,7 +81,11 @@ function RoomState(roomId, oobMemberFlags = undefined) {
     };
     this._updateModifiedTime();
 
-    // stores fuzzy matches to a list of userIDs (applies utils.removeHiddenChars to keys)
+    /**
+     * stores fuzzy matches to a list of userIDs (applies utils.removeHiddenChars to keys)
+     * Map display name → array of userIds
+     * @type Map<string, string[]>
+     */
     this._displayNameToUserIds = new Map();
     this._userIdsToDisplayNames = {};
     this._tokenToInvite = {}; // 3pid invite state_key to m.room.member invite
