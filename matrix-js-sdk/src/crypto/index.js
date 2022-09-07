@@ -144,10 +144,18 @@ export default function Crypto(baseApis, sessionStore, userId, deviceId,
     this._lastOneTimeKeyCheck = null;
     this._oneTimeKeyCheckInProgress = false;
 
-    // EncryptionAlgorithm instance for each room
+    /**
+     * EncryptionAlgorithm instance for each room
+     * Map roomId → algorithm
+     * @type Map<string, EncryptionAlgorithm>
+     */
     this._roomEncryptors = new Map();
 
-    // map from algorithm to DecryptionAlgorithm instance, for each room
+    /**
+     * map from algorithm to DecryptionAlgorithm instance, for each room
+     * Map roomId → algorithmName -> algorithm
+     * @type Map<string, Map<string, EncryptionAlgorithm>>
+     */
     this._roomDecryptors = new Map();
 
     this._supportedAlgorithms = Array.from(algorithms.DECRYPTION_CLASSES.keys());
