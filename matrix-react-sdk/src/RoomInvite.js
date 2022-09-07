@@ -370,8 +370,12 @@ function _getDirectMessageRooms(addr) {
         if (r.getMyMembership() === "invite") {
             const users = Object.keys(r.currentState.members);
             if (users.includes(addr)) {
-                const memberEvent = r.currentState.events["m.room.member"];
-                if (memberEvent[currentUserId].event.content.is_direct === true) {
+                /**
+                 * Map state key → MatrixEvent
+                 * @type Map<string, MatrixEvent>
+                 */
+                const memberEvent = r.currentState.events.get("m.room.member");
+                if (memberEvent.get(currentUserId).event.content.is_direct === true) {
                     if (!dmRooms.includes(r)) {
                         dmRooms.push(r);
                     }
