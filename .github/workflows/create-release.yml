@@ -40,7 +40,7 @@ jobs:
       - name: Create tchap-web release
         uses: ncipollo/release-action@v1
         with:
-          tag: "v${{ steps.version.outputs.version }}"
+          tag: "v${{ steps.version.outputs.version }}-tchap"
           generateReleaseNotes: true
           artifacts: >
             /home/runner/work/tchap-web/tchap-web/tchap-${{ steps.version.outputs.version }}-dev-${{ steps.date.outputs.date }}.tar.gz,
