@@ -591,15 +591,17 @@ module.exports = React.createClass({
         if (err) {
             errorText = <div className="mx_Login_error">{ err }</div>;
         }
-
-        const signIn = <a className="mx_AuthBody_changeFlow" onClick={this.onLoginClick} href="#">
+        
+        //:tchap: todo not tested in dev server
+        const signIn = <a className="mx_AuthBody_changeFlow" href="/">
             { _t('Sign in instead') }
         </a>;
 
         // Only show the 'go back' button if you're not looking at the form
         let goBack;
         if ((PHASES_ENABLED && this.state.phase !== PHASE_REGISTRATION) || this.state.doingUIAuth) {
-            goBack = <a className="mx_AuthBody_changeFlow" onClick={this.onGoToFormClicked} href="#">
+            //:tchap: todo not tested in dev server
+            goBack = <a className="mx_AuthBody_changeFlow" href="/">
                 { _t('Go back') }
             </a>;
         }
