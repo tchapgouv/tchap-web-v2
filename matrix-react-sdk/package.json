@@ -154,7 +154,7 @@
         "rimraf": "^2.4.3",
         "sinon": "^5.0.7",
         "source-map-loader": "^0.2.3",
-        "stylelint": "^9.10.1",
+        "stylelint": "^15.10.1",
         "stylelint-config-standard": "^18.2.0",
         "walk": "^2.3.9",
         "webpack": "^4.20.2",
